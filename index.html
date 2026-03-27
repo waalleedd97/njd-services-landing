@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NJD Games — خدمات نجد</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════
+           LIGHT THEME (Default)
+           ═══════════════════════════════════════════ */
+        :root {
+            --white: #FFFFFF;
+            --gray-50: #FAFAFA;
+            --gray-100: #F4F4F5;
+            --gray-200: #E4E4E7;
+            --gray-300: #D4D4D8;
+            --gray-400: #A1A1AA;
+            --gray-500: #71717A;
+            --gray-600: #52525B;
+            --gray-700: #3F3F46;
+            --gray-800: #27272A;
+            --gray-900: #18181B;
+
+            --purple-50: #FAF5FF;
+            --purple-100: #F3E8FF;
+            --purple-200: #E9D5FF;
+            --purple-300: #D8B4FE;
+            --purple-400: #C084FC;
+            --purple-500: #A855F7;
+            --purple-600: #9333EA;
+            --purple-700: #7E22CE;
+            --purple-800: #6B21A8;
+            --purple-900: #581C87;
+
+            --header-bg: rgba(255, 255, 255, 0.85);
+            --header-scrolled-shadow: 0 1px 12px rgba(0,0,0,0.04);
+            --status-bg: #ECFDF5;
+            --status-border: #D1FAE5;
+            --status-color: #059669;
+            --status-dot: #10B981;
+            --hero-gradient: radial-gradient(ellipse 80% 60% at 50% 0%, var(--purple-50) 0%, transparent 70%);
+            --card-hover-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            --gradient-text-from: var(--purple-600);
+            --gradient-text-to: var(--purple-800);
+
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.08);
+            --shadow-xl: 0 20px 60px rgba(0,0,0,0.1);
+            --shadow-purple: 0 12px 40px rgba(147, 51, 234, 0.18);
+
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+
+            --transition-smooth: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --transition-ease: 0.3s ease;
+        }
+
+        /* ═══════════════════════════════════════════
+           DARK THEME
+           ═══════════════════════════════════════════ */
+        [data-theme="dark"] {
+            --white: #0C0C14;
+            --gray-50: #121220;
+            --gray-100: #1C1C2E;
+            --gray-200: #2A2A40;
+            --gray-300: #3A3A55;
+            --gray-400: #606078;
+            --gray-500: #9090A8;
+            --gray-600: #B0B0C4;
+            --gray-700: #D0D0DD;
+            --gray-800: #E8E8F0;
+            --gray-900: #F4F4F8;
+
+            --purple-50: #14102A;
+            --purple-100: #1E1845;
+            --purple-200: #2E2460;
+
+            --header-bg: rgba(12, 12, 20, 0.88);
+            --header-scrolled-shadow: 0 1px 12px rgba(0,0,0,0.25);
+            --status-bg: rgba(16, 185, 129, 0.1);
+            --status-border: rgba(16, 185, 129, 0.2);
+            --status-color: #34D399;
+            --status-dot: #34D399;
+            --hero-gradient: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(88, 28, 135, 0.18) 0%, transparent 70%);
+            --card-hover-shadow: 0 20px 60px rgba(0,0,0,0.35);
+            --gradient-text-from: var(--purple-400);
+            --gradient-text-to: #D8B4FE;
+            --shadow-purple: 0 12px 40px rgba(147, 51, 234, 0.3);
+        }
+
+        /* ═══════════════════════════════════════════
+           THEME TRANSITION
+           ═══════════════════════════════════════════ */
+        .theme-transitioning,
+        .theme-transitioning *,
+        .theme-transitioning *::before,
+        .theme-transitioning *::after {
+            transition: background-color 0.4s ease,
+                        color 0.4s ease,
+                        border-color 0.4s ease,
+                        box-shadow 0.4s ease,
+                        fill 0.4s ease,
+                        stroke 0.4s ease !important;
+        }
+
+        /* ═══════════════════════════════════════════
+           RESET & BASE
+           ═══════════════════════════════════════════ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--white);
+            color: var(--gray-800);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* ═══════════════════════════════════════════
+           HEADER
+           ═══════════════════════════════════════════ */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--header-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid transparent;
+            transition: border-color var(--transition-ease), box-shadow var(--transition-ease);
+        }
+
+        .header.scrolled {
+            border-bottom-color: var(--gray-100);
+            box-shadow: var(--header-scrolled-shadow);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 32px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        [data-theme="dark"] .logo-img {
+            filter: brightness(1.15);
+        }
+
+        /* ═══════════════════════════════════════════
+           HEADER CONTROLS
+           ═══════════════════════════════════════════ */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Language Toggle */
+        .lang-toggle {
+            display: flex;
+            background: var(--gray-100);
+            border-radius: 100px;
+            padding: 3px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .lang-btn {
+            padding: 5px 14px;
+            border: none;
+            border-radius: 100px;
+            background: transparent;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            line-height: 1.4;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, var(--purple-600), var(--purple-700));
+            color: white;
+            box-shadow: 0 2px 10px rgba(147, 51, 234, 0.3);
+        }
+
+        .lang-btn:not(.active):hover {
+            color: var(--gray-600);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .theme-toggle:hover {
+            background: var(--gray-200);
+            border-color: var(--gray-300);
+        }
+
+        .theme-icon {
+            width: 18px;
+            height: 18px;
+            position: absolute;
+            transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+            stroke: var(--gray-600);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .sun-icon {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+
+        .moon-icon {
+            opacity: 0;
+            transform: rotate(-90deg) scale(0.5);
+        }
+
+        [data-theme="dark"] .sun-icon {
+            opacity: 0;
+            transform: rotate(90deg) scale(0.5);
+        }
+
+        [data-theme="dark"] .moon-icon {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+            stroke: var(--purple-400);
+        }
+
+        /* Header Badge */
+        .header-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: var(--purple-50);
+            border: 1px solid var(--purple-100);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--purple-700);
+        }
+
+        [data-theme="dark"] .header-badge {
+            color: var(--purple-400);
+        }
+
+        .header-badge-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--purple-500);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        /* ═══════════════════════════════════════════
+           HERO SECTION
+           ═══════════════════════════════════════════ */
+        .hero {
+            position: relative;
+            padding: 80px 32px 60px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: var(--hero-gradient);
+            pointer-events: none;
+        }
+
+        .hero-dots {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, var(--purple-200) 0.8px, transparent 0.8px);
+            background-size: 32px 32px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        [data-theme="dark"] .hero-dots { opacity: 0.06; }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        .orb-1 {
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, var(--purple-300), transparent 70%);
+            top: -60px; right: -80px;
+            opacity: 0.15;
+            animation: floatOrb1 12s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 250px; height: 250px;
+            background: radial-gradient(circle, var(--purple-400), transparent 70%);
+            bottom: -40px; left: -60px;
+            opacity: 0.1;
+            animation: floatOrb2 10s ease-in-out infinite;
+        }
+
+        .orb-3 {
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, var(--purple-200), transparent 70%);
+            top: 40%; left: 15%;
+            opacity: 0.12;
+            animation: floatOrb3 14s ease-in-out infinite;
+        }
+
+        [data-theme="dark"] .orb-1 { opacity: 0.08; }
+        [data-theme="dark"] .orb-2 { opacity: 0.06; }
+        [data-theme="dark"] .orb-3 { opacity: 0.05; }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .hero-greeting {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--purple-600);
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards 0.1s;
+        }
+
+        [data-theme="dark"] .hero-greeting { color: var(--purple-400); }
+
+        .hero-title {
+            font-size: 3.2rem;
+            font-weight: 900;
+            color: var(--gray-900);
+            line-height: 1.25;
+            margin-bottom: 12px;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards 0.2s;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, var(--gradient-text-from), var(--gradient-text-to));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-desc {
+            font-size: 17px;
+            font-weight: 400;
+            color: var(--gray-500);
+            line-height: 1.8;
+            max-width: 520px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards 0.4s;
+        }
+
+        /* ═══════════════════════════════════════════
+           APPS SECTION
+           ═══════════════════════════════════════════ */
+        .apps-section {
+            padding: 20px 32px 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 32px;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards 0.5s;
+        }
+
+        /* ═══════════════════════════════════════════
+           APP CARD
+           ═══════════════════════════════════════════ */
+        .app-card {
+            background: var(--white);
+            border: 1px solid var(--gray-100);
+            border-radius: var(--radius-xl);
+            padding: 40px 36px 36px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            transition: transform var(--transition-smooth),
+                        box-shadow var(--transition-ease),
+                        border-color var(--transition-ease);
+            will-change: transform;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .app-card {
+            background: var(--gray-50);
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--purple-400), var(--purple-600));
+            opacity: 0;
+            transition: opacity var(--transition-ease);
+        }
+
+        .app-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--card-hover-shadow);
+            border-color: var(--purple-100);
+        }
+
+        .app-card:hover::before { opacity: 1; }
+
+        .app-card:hover .icon-container { transform: translateY(-4px); }
+
+        .app-card:hover .icon-container .clay-icon {
+            filter: drop-shadow(0 16px 24px rgba(0,0,0,0.12));
+        }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 14px;
+            background: var(--status-bg);
+            border: 1px solid var(--status-border);
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--status-color);
+            margin-bottom: 28px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--status-dot);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        /* Icon container */
+        .icon-container {
+            width: 160px;
+            height: 160px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform var(--transition-smooth);
+            animation: iconFloat 6s ease-in-out infinite;
+        }
+
+        .icon-container .clay-icon {
+            width: 100%;
+            height: 100%;
+            transition: filter var(--transition-ease);
+        }
+
+        /* Card typography */
+        .app-name-primary {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+
+        .app-name-secondary {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-400);
+            margin-bottom: 16px;
+            letter-spacing: 0.3px;
+        }
+
+        .app-desc {
+            font-size: 15px;
+            font-weight: 400;
+            color: var(--gray-500);
+            line-height: 1.7;
+            margin-bottom: 28px;
+            max-width: 300px;
+        }
+
+        /* Launch button */
+        .launch-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 36px;
+            background: linear-gradient(135deg, var(--purple-600), var(--purple-700));
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-ease);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .launch-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.12), transparent);
+            pointer-events: none;
+        }
+
+        .launch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-purple);
+            background: linear-gradient(135deg, var(--purple-500), var(--purple-700));
+        }
+
+        .launch-btn:active { transform: translateY(0); }
+
+        .launch-btn .btn-arrow {
+            width: 18px;
+            height: 18px;
+            transition: transform var(--transition-ease);
+        }
+
+        .launch-btn:hover .btn-arrow {
+            transform: translateX(-4px);
+        }
+
+        /* Flip arrow for LTR */
+        [dir="ltr"] .launch-btn .btn-arrow {
+            transform: scaleX(-1);
+        }
+
+        [dir="ltr"] .launch-btn:hover .btn-arrow {
+            transform: scaleX(-1) translateX(-4px);
+        }
+
+        /* ═══════════════════════════════════════════
+           COMING SOON CARD
+           ═══════════════════════════════════════════ */
+        .coming-soon-card {
+            border: 2px dashed var(--gray-200);
+            border-radius: var(--radius-xl);
+            padding: 40px 36px 36px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 420px;
+            transition: border-color var(--transition-ease);
+        }
+
+        .coming-soon-card:hover { border-color: var(--purple-200); }
+
+        [data-theme="dark"] .coming-soon-card:hover { border-color: var(--purple-100); }
+
+        .coming-soon-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--gray-50);
+            border: 2px dashed var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            transition: all var(--transition-ease);
+        }
+
+        [data-theme="dark"] .coming-soon-icon { background: var(--gray-100); }
+
+        .coming-soon-card:hover .coming-soon-icon {
+            background: var(--purple-50);
+            border-color: var(--purple-200);
+        }
+
+        .coming-soon-icon svg {
+            width: 32px; height: 32px;
+            color: var(--gray-300);
+            transition: color var(--transition-ease);
+        }
+
+        .coming-soon-card:hover .coming-soon-icon svg { color: var(--purple-400); }
+
+        .coming-soon-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-400);
+        }
+
+        .coming-soon-subtext {
+            font-size: 13px;
+            color: var(--gray-300);
+            margin-top: 4px;
+        }
+
+        /* ═══════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════ */
+        .footer {
+            margin-top: auto;
+            padding: 32px;
+            text-align: center;
+            border-top: 1px solid var(--gray-100);
+        }
+
+        .footer-text {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--gray-400);
+        }
+
+        .footer-text strong {
+            font-weight: 700;
+            color: var(--gray-500);
+        }
+
+        /* ═══════════════════════════════════════════
+           KEYFRAME ANIMATIONS
+           ═══════════════════════════════════════════ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        @keyframes floatOrb1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(15px, -20px) scale(1.05); }
+            66% { transform: translate(-10px, 10px) scale(0.95); }
+        }
+
+        @keyframes floatOrb2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(20px, -15px) scale(1.08); }
+        }
+
+        @keyframes floatOrb3 {
+            0%, 100% { transform: translate(0, 0); }
+            40% { transform: translate(-12px, -18px); }
+            80% { transform: translate(8px, 12px); }
+        }
+
+        /* ═══════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .hero { padding: 60px 20px 40px; }
+            .hero-title { font-size: 2.2rem; }
+            .hero-desc { font-size: 15px; }
+            .apps-section { padding: 10px 20px 60px; }
+            .apps-grid { grid-template-columns: 1fr; gap: 24px; }
+            .app-card { padding: 32px 28px 28px; }
+            .icon-container { width: 130px; height: 130px; }
+            .header-inner { padding: 0 16px; height: 64px; }
+            .header-controls { gap: 8px; }
+            .header-badge { display: none; }
+            .lang-btn { padding: 5px 10px; font-size: 11px; }
+            .theme-toggle { width: 36px; height: 36px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 1.8rem; }
+        }
+
+        /* ═══════════════════════════════════════════
+           AUTH SCREEN
+           ═══════════════════════════════════════════ */
+        .auth-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--white);
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .auth-overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--hero-gradient);
+            pointer-events: none;
+        }
+
+        .auth-overlay .auth-dots {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, var(--purple-200) 0.8px, transparent 0.8px);
+            background-size: 32px 32px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        [data-theme="dark"] .auth-overlay .auth-dots { opacity: 0.06; }
+
+        .auth-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .auth-card {
+            position: relative;
+            z-index: 2;
+            background: var(--white);
+            border: 1px solid var(--gray-100);
+            border-radius: var(--radius-xl);
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 420px;
+            margin: 0 20px;
+            box-shadow: var(--shadow-lg);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        [data-theme="dark"] .auth-card { background: var(--gray-50); }
+
+        .auth-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+
+        .auth-logo .logo-img { height: 48px; }
+
+        .auth-tabs {
+            display: flex;
+            background: var(--gray-100);
+            border-radius: 100px;
+            padding: 3px;
+            border: 1px solid var(--gray-200);
+            margin-bottom: 28px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 100px;
+            background: transparent;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            line-height: 1.4;
+        }
+
+        .auth-tab.active {
+            background: linear-gradient(135deg, var(--purple-600), var(--purple-700));
+            color: white;
+            box-shadow: 0 2px 10px rgba(147, 51, 234, 0.3);
+        }
+
+        .auth-tab:not(.active):hover { color: var(--gray-600); }
+
+        .auth-field { margin-bottom: 18px; }
+
+        .auth-field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-600);
+            margin-bottom: 6px;
+        }
+
+        .auth-field input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            background: var(--gray-50);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 15px;
+            color: var(--gray-800);
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .auth-field input:focus {
+            border-color: var(--purple-400);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
+            background: var(--white);
+        }
+
+        .auth-field input::placeholder { color: var(--gray-300); }
+
+        .auth-input-wrap { position: relative; }
+
+        .auth-input-wrap input { padding-right: 44px; }
+
+        .password-toggle {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            color: var(--gray-400);
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-toggle:hover { color: var(--gray-600); }
+
+        .password-toggle svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .auth-confirm-field { display: none; }
+
+        .auth-error {
+            color: #EF4444;
+            font-size: 13px;
+            font-weight: 500;
+            min-height: 0;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .auth-error:empty { margin-bottom: 0; }
+
+        .auth-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--purple-600), var(--purple-700));
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 50px;
+        }
+
+        .auth-submit::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.12), transparent);
+            pointer-events: none;
+        }
+
+        .auth-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-purple);
+            background: linear-gradient(135deg, var(--purple-500), var(--purple-700));
+        }
+
+        .auth-submit:active:not(:disabled) { transform: translateY(0); }
+
+        .auth-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .auth-spinner {
+            width: 22px;
+            height: 22px;
+            border: 2.5px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: authSpin 0.7s linear infinite;
+        }
+
+        @keyframes authSpin { to { transform: rotate(360deg); } }
+
+        .auth-info {
+            text-align: center;
+            padding: 14px 16px;
+            background: var(--status-bg);
+            border: 1px solid var(--status-border);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--status-color);
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+
+        /* ═══════════════════════════════════════════
+           LOGOUT BUTTON
+           ═══════════════════════════════════════════ */
+        .logout-btn {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: transparent;
+            border: 1px solid var(--gray-200);
+            border-radius: 100px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-500);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.06);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #EF4444;
+        }
+
+        [data-theme="dark"] .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.25);
+            color: #F87171;
+        }
+
+        .logout-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        @media (max-width: 768px) {
+            .auth-card { padding: 36px 24px; }
+            .logout-btn .logout-text { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══════════════ AUTH SCREEN ═══════════════ -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-dots"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+
+        <div class="auth-card">
+            <div class="auth-logo">
+                <img src="logo.png" alt="NJD Games" class="logo-img">
+            </div>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login" data-i18n="authTabLogin">تسجيل الدخول</button>
+                <button class="auth-tab" data-tab="register" data-i18n="authTabRegister">إنشاء حساب</button>
+            </div>
+
+            <form id="authForm" autocomplete="on">
+                <div class="auth-field">
+                    <label for="authEmail" data-i18n="authEmailLabel">البريد الإلكتروني</label>
+                    <input type="email" id="authEmail" placeholder="name@njdstudio.net" required autocomplete="email">
+                </div>
+                <div class="auth-field">
+                    <label for="authPassword" data-i18n="authPasswordLabel">كلمة المرور</label>
+                    <div class="auth-input-wrap">
+                        <input type="password" id="authPassword" placeholder="••••••••" required minlength="6" autocomplete="current-password">
+                        <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                            <svg class="eye-icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg class="eye-off-icon" viewBox="0 0 24 24" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="auth-field auth-confirm-field" id="authConfirmField">
+                    <label for="authConfirm" data-i18n="authConfirmLabel">تأكيد كلمة المرور</label>
+                    <div class="auth-input-wrap">
+                        <input type="password" id="authConfirm" placeholder="••••••••" minlength="6" autocomplete="new-password">
+                        <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                            <svg class="eye-icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg class="eye-off-icon" viewBox="0 0 24 24" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="auth-error" id="authError"></div>
+                <button type="submit" class="auth-submit" id="authSubmit">
+                    <span class="auth-submit-text">تسجيل الدخول</span>
+                    <div class="auth-spinner" style="display: none;"></div>
+                </button>
+            </form>
+
+            <div class="auth-info" id="authInfo" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- ═══════════════ HEADER ═══════════════ -->
+    <header class="header" id="header">
+        <div class="header-inner">
+            <div class="logo">
+                <img src="logo.png" alt="NJD Games" class="logo-img">
+            </div>
+
+            <div class="header-controls">
+                <!-- Language Toggle -->
+                <div class="lang-toggle" role="radiogroup" aria-label="Switch language">
+                    <button class="lang-btn active" data-lang="ar" role="radio" aria-checked="true">عربي</button>
+                    <button class="lang-btn" data-lang="en" role="radio" aria-checked="false">EN</button>
+                </div>
+
+                <!-- Theme Toggle -->
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <!-- Sun -->
+                    <svg class="theme-icon sun-icon" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                    <!-- Moon -->
+                    <svg class="theme-icon moon-icon" viewBox="0 0 24 24">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </button>
+
+                <!-- Badge -->
+                <div class="header-badge">
+                    <span class="header-badge-dot"></span>
+                    <span data-i18n="headerBadge">بوابة داخلية</span>
+                </div>
+
+                <!-- Logout -->
+                <button class="logout-btn" id="logoutBtn">
+                    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    <span class="logout-text" data-i18n="logoutBtn">خروج</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- ═══════════════ HERO ═══════════════ -->
+        <section class="hero">
+            <div class="hero-bg"></div>
+            <div class="hero-dots"></div>
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
+
+            <div class="hero-content">
+                <p class="hero-greeting" id="greeting">مرحباً</p>
+                <h1 class="hero-title" data-i18n="heroTitle" data-i18n-html>خدمات <span>نجد</span></h1>
+                <p class="hero-desc" data-i18n="heroDesc">
+                    وصولك السريع لجميع الأدوات والتطبيقات الداخلية لفريق NJD Games.
+                </p>
+            </div>
+        </section>
+
+        <!-- ═══════════════ APPS GRID ═══════════════ -->
+        <section class="apps-section">
+            <div class="apps-grid">
+
+                <!-- ──────── NJD Board Card ──────── -->
+                <article class="app-card">
+                    <div class="status-badge">
+                        <span class="status-dot"></span>
+                        <span data-i18n="statusOnline">متاح — Online</span>
+                    </div>
+
+                    <div class="icon-container">
+                        <!-- 3D Clay Kanban Board Icon -->
+                        <svg class="clay-icon" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="boardBg" x1="100" y1="24" x2="100" y2="178" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#818CF8"/>
+                                    <stop offset="100%" stop-color="#4F46E5"/>
+                                </linearGradient>
+                                <radialGradient id="boardShine" cx="0.35" cy="0.15" r="0.65">
+                                    <stop offset="0%" stop-color="white" stop-opacity="0.35"/>
+                                    <stop offset="100%" stop-color="white" stop-opacity="0"/>
+                                </radialGradient>
+                                <linearGradient id="clipBg" x1="100" y1="10" x2="100" y2="38" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#E2E8F0"/>
+                                    <stop offset="100%" stop-color="#94A3B8"/>
+                                </linearGradient>
+                                <linearGradient id="cardOrange" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#FDBA74"/><stop offset="100%" stop-color="#F97316"/>
+                                </linearGradient>
+                                <linearGradient id="cardGreen" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#86EFAC"/><stop offset="100%" stop-color="#22C55E"/>
+                                </linearGradient>
+                                <linearGradient id="cardBlue" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#93C5FD"/><stop offset="100%" stop-color="#3B82F6"/>
+                                </linearGradient>
+                                <linearGradient id="cardPink" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#F9A8D4"/><stop offset="100%" stop-color="#EC4899"/>
+                                </linearGradient>
+                                <linearGradient id="cardYellow" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#FBBF24"/>
+                                </linearGradient>
+                                <filter id="boardShadow" x="-20%" y="-10%" width="140%" height="140%">
+                                    <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#4338CA" flood-opacity="0.25"/>
+                                </filter>
+                                <filter id="cardShadow">
+                                    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.1"/>
+                                </filter>
+                                <filter id="clipShadow">
+                                    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.12"/>
+                                </filter>
+                            </defs>
+                            <ellipse cx="100" cy="188" rx="58" ry="9" fill="#4338CA" opacity="0.1"/>
+                            <g transform="rotate(-4, 100, 100)" filter="url(#boardShadow)">
+                                <rect x="32" y="28" width="136" height="148" rx="16" fill="url(#boardBg)"/>
+                                <rect x="32" y="28" width="136" height="148" rx="16" fill="none" stroke="white" stroke-opacity="0.15" stroke-width="1.5"/>
+                                <rect x="32" y="28" width="136" height="148" rx="16" fill="url(#boardShine)"/>
+                                <line x1="78" y1="56" x2="78" y2="162" stroke="white" stroke-opacity="0.15" stroke-width="1"/>
+                                <line x1="122" y1="56" x2="122" y2="162" stroke="white" stroke-opacity="0.15" stroke-width="1"/>
+                                <circle cx="55" cy="50" r="3" fill="white" fill-opacity="0.35"/>
+                                <circle cx="100" cy="50" r="3" fill="white" fill-opacity="0.35"/>
+                                <circle cx="145" cy="50" r="3" fill="white" fill-opacity="0.35"/>
+                                <g filter="url(#cardShadow)">
+                                    <rect x="38" y="60" width="34" height="26" rx="6" fill="url(#cardOrange)"/>
+                                    <rect x="38" y="60" width="34" height="26" rx="6" fill="white" fill-opacity="0.15"/>
+                                    <line x1="43" y1="68" x2="60" y2="68" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
+                                    <line x1="43" y1="74" x2="54" y2="74" stroke="white" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/>
+                                </g>
+                                <g filter="url(#cardShadow)">
+                                    <rect x="38" y="92" width="34" height="30" rx="6" fill="url(#cardYellow)"/>
+                                    <rect x="38" y="92" width="34" height="30" rx="6" fill="white" fill-opacity="0.15"/>
+                                    <line x1="43" y1="101" x2="62" y2="101" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
+                                    <line x1="43" y1="107" x2="55" y2="107" stroke="white" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/>
+                                    <line x1="43" y1="113" x2="50" y2="113" stroke="white" stroke-opacity="0.25" stroke-width="1.5" stroke-linecap="round"/>
+                                </g>
+                                <g filter="url(#cardShadow)">
+                                    <rect x="38" y="128" width="34" height="22" rx="6" fill="url(#cardGreen)"/>
+                                    <rect x="38" y="128" width="34" height="22" rx="6" fill="white" fill-opacity="0.15"/>
+                                    <path d="M49 139 L53 143 L63 133" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </g>
+                                <g filter="url(#cardShadow)">
+                                    <rect x="83" y="60" width="34" height="40" rx="6" fill="url(#cardBlue)"/>
+                                    <rect x="83" y="60" width="34" height="40" rx="6" fill="white" fill-opacity="0.15"/>
+                                    <line x1="88" y1="69" x2="106" y2="69" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
+                                    <line x1="88" y1="76" x2="101" y2="76" stroke="white" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/>
+                                    <line x1="88" y1="83" x2="96" y2="83" stroke="white" stroke-opacity="0.25" stroke-width="1.5" stroke-linecap="round"/>
+                                    <line x1="88" y1="90" x2="103" y2="90" stroke="white" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/>
+                                </g>
+                                <g filter="url(#cardShadow)">
+                                    <rect x="83" y="106" width="34" height="26" rx="6" fill="url(#cardPink)"/>
+                                    <rect x="83" y="106" width="34" height="26" rx="6" fill="white" fill-opacity="0.15"/>
+                                    <line x1="88" y1="115" x2="107" y2="115" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
+                                    <line x1="88" y1="122" x2="99" y2="122" stroke="white" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/>
+                                </g>
+                                <g filter="url(#cardShadow)">
+                                    <rect x="128" y="60" width="34" height="26" rx="6" fill="url(#cardGreen)"/>
+                                    <rect x="128" y="60" width="34" height="26" rx="6" fill="white" fill-opacity="0.15"/>
+                                    <path d="M139 73 L143 77 L153 67" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </g>
+                                <g filter="url(#cardShadow)">
+                                    <rect x="128" y="92" width="34" height="22" rx="6" fill="url(#cardOrange)"/>
+                                    <rect x="128" y="92" width="34" height="22" rx="6" fill="white" fill-opacity="0.15"/>
+                                    <line x1="133" y1="100" x2="150" y2="100" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
+                                    <line x1="133" y1="106" x2="144" y2="106" stroke="white" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/>
+                                </g>
+                                <g filter="url(#cardShadow)">
+                                    <rect x="128" y="120" width="34" height="30" rx="6" fill="url(#cardBlue)"/>
+                                    <rect x="128" y="120" width="34" height="30" rx="6" fill="white" fill-opacity="0.15"/>
+                                    <line x1="133" y1="129" x2="152" y2="129" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
+                                    <line x1="133" y1="136" x2="146" y2="136" stroke="white" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/>
+                                    <line x1="133" y1="142" x2="140" y2="142" stroke="white" stroke-opacity="0.25" stroke-width="1.5" stroke-linecap="round"/>
+                                </g>
+                            </g>
+                            <g filter="url(#clipShadow)">
+                                <rect x="72" y="12" width="56" height="26" rx="8" fill="url(#clipBg)"/>
+                                <rect x="72" y="12" width="56" height="26" rx="8" fill="none" stroke="white" stroke-opacity="0.3" stroke-width="1"/>
+                                <rect x="84" y="19" width="32" height="12" rx="4" fill="#64748B"/>
+                                <rect x="84" y="19" width="32" height="6" rx="4" fill="white" fill-opacity="0.15"/>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <h2 class="app-name-primary" data-i18n="boardPrimary">NJD Board</h2>
+                    <p class="app-name-secondary" data-i18n="boardSecondary">إدارة المشاريع</p>
+                    <p class="app-desc" data-i18n="boardDesc">أداة إدارة المشاريع الداخلية — تتبع المهام والتقدم ونظّم عمل الفريق بكفاءة.</p>
+                    <a href="https://board.njd-services.net" target="_blank" rel="noopener noreferrer" class="launch-btn">
+                        <span data-i18n="launchBtn">الدخول</span>
+                        <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>
+                        </svg>
+                    </a>
+                </article>
+
+                <!-- ──────── NJD HR Card ──────── -->
+                <article class="app-card">
+                    <div class="status-badge">
+                        <span class="status-dot"></span>
+                        <span data-i18n="statusOnline">متاح — Online</span>
+                    </div>
+
+                    <div class="icon-container" style="animation-delay: -3s;">
+                        <!-- 3D Clay People/HR Icon -->
+                        <svg class="clay-icon" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="personMain" x1="100" y1="50" x2="100" y2="165" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#2DD4BF"/><stop offset="100%" stop-color="#0D9488"/>
+                                </linearGradient>
+                                <linearGradient id="personMainHead" x1="100" y1="35" x2="100" y2="75" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#5EEAD4"/><stop offset="100%" stop-color="#14B8A6"/>
+                                </linearGradient>
+                                <linearGradient id="personLeft" x1="55" y1="65" x2="55" y2="155" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#A78BFA"/><stop offset="100%" stop-color="#7C3AED"/>
+                                </linearGradient>
+                                <linearGradient id="personLeftHead" x1="55" y1="55" x2="55" y2="82" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#8B5CF6"/>
+                                </linearGradient>
+                                <linearGradient id="personRight" x1="145" y1="65" x2="145" y2="155" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#FDA4AF"/><stop offset="100%" stop-color="#F43F5E"/>
+                                </linearGradient>
+                                <linearGradient id="personRightHead" x1="145" y1="55" x2="145" y2="82" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#FECDD3"/><stop offset="100%" stop-color="#FB7185"/>
+                                </linearGradient>
+                                <linearGradient id="badgeBg" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#FBBF24"/>
+                                </linearGradient>
+                                <radialGradient id="personShine" cx="0.38" cy="0.15" r="0.6">
+                                    <stop offset="0%" stop-color="white" stop-opacity="0.3"/><stop offset="100%" stop-color="white" stop-opacity="0"/>
+                                </radialGradient>
+                                <filter id="peopleShadow" x="-20%" y="-10%" width="140%" height="140%">
+                                    <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#0D9488" flood-opacity="0.2"/>
+                                </filter>
+                                <filter id="personSmallShadow">
+                                    <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity="0.12"/>
+                                </filter>
+                                <filter id="headShadow">
+                                    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.08"/>
+                                </filter>
+                            </defs>
+                            <ellipse cx="100" cy="186" rx="70" ry="10" fill="#0D9488" opacity="0.1"/>
+                            <g filter="url(#personSmallShadow)">
+                                <rect x="36" y="100" width="38" height="56" rx="16" fill="url(#personLeft)"/>
+                                <rect x="36" y="100" width="38" height="56" rx="16" fill="url(#personShine)"/>
+                                <rect x="36" y="100" width="38" height="56" rx="16" fill="none" stroke="white" stroke-opacity="0.15" stroke-width="1"/>
+                                <g filter="url(#headShadow)">
+                                    <circle cx="55" cy="80" r="18" fill="url(#personLeftHead)"/>
+                                    <circle cx="55" cy="80" r="18" fill="none" stroke="white" stroke-opacity="0.2" stroke-width="1"/>
+                                    <ellipse cx="50" cy="74" rx="8" ry="6" fill="white" fill-opacity="0.15"/>
+                                </g>
+                            </g>
+                            <g filter="url(#personSmallShadow)">
+                                <rect x="126" y="100" width="38" height="56" rx="16" fill="url(#personRight)"/>
+                                <rect x="126" y="100" width="38" height="56" rx="16" fill="url(#personShine)"/>
+                                <rect x="126" y="100" width="38" height="56" rx="16" fill="none" stroke="white" stroke-opacity="0.15" stroke-width="1"/>
+                                <g filter="url(#headShadow)">
+                                    <circle cx="145" cy="80" r="18" fill="url(#personRightHead)"/>
+                                    <circle cx="145" cy="80" r="18" fill="none" stroke="white" stroke-opacity="0.2" stroke-width="1"/>
+                                    <ellipse cx="140" cy="74" rx="8" ry="6" fill="white" fill-opacity="0.15"/>
+                                </g>
+                            </g>
+                            <g filter="url(#peopleShadow)">
+                                <rect x="74" y="88" width="52" height="70" rx="20" fill="url(#personMain)"/>
+                                <rect x="74" y="88" width="52" height="70" rx="20" fill="url(#personShine)"/>
+                                <rect x="74" y="88" width="52" height="70" rx="20" fill="none" stroke="white" stroke-opacity="0.15" stroke-width="1.5"/>
+                                <g>
+                                    <rect x="87" y="102" width="26" height="20" rx="4" fill="white" fill-opacity="0.95"/>
+                                    <rect x="87" y="102" width="26" height="20" rx="4" fill="none" stroke="#0D9488" stroke-opacity="0.2" stroke-width="0.75"/>
+                                    <circle cx="95" cy="109" r="3.5" fill="#99F6E4"/>
+                                    <line x1="101" y1="107" x2="109" y2="107" stroke="#99F6E4" stroke-width="1.5" stroke-linecap="round"/>
+                                    <line x1="101" y1="111" x2="107" y2="111" stroke="#99F6E4" stroke-width="1.5" stroke-linecap="round"/>
+                                    <rect x="96" y="98" width="8" height="6" rx="2" fill="url(#badgeBg)"/>
+                                </g>
+                                <g filter="url(#headShadow)">
+                                    <circle cx="100" cy="62" r="24" fill="url(#personMainHead)"/>
+                                    <circle cx="100" cy="62" r="24" fill="none" stroke="white" stroke-opacity="0.2" stroke-width="1.5"/>
+                                    <ellipse cx="93" cy="54" rx="10" ry="8" fill="white" fill-opacity="0.18"/>
+                                </g>
+                            </g>
+                            <g transform="translate(148, 48) scale(0.9)">
+                                <path d="M10 6 C10 2, 16 0, 16 5 C16 0, 22 2, 22 6 C22 12, 16 16, 16 16 C16 16, 10 12, 10 6Z" fill="#F43F5E" opacity="0.7"/>
+                                <path d="M10 6 C10 2, 16 0, 16 5 C16 0, 22 2, 22 6 C22 12, 16 16, 16 16 C16 16, 10 12, 10 6Z" fill="white" fill-opacity="0.2"/>
+                            </g>
+                            <g transform="translate(24, 50) scale(0.7)">
+                                <path d="M10 0 L12.5 7.5 L20 10 L12.5 12.5 L10 20 L7.5 12.5 L0 10 L7.5 7.5Z" fill="#FBBF24" opacity="0.6"/>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <h2 class="app-name-primary" data-i18n="hrPrimary">NJD HR</h2>
+                    <p class="app-name-secondary" data-i18n="hrSecondary">الموارد البشرية</p>
+                    <p class="app-desc" data-i18n="hrDesc">بوابة الموارد البشرية — إدارة الحضور والإجازات وشؤون الموظفين في مكان واحد.</p>
+                    <a href="https://njd-hr.vercel.app" target="_blank" rel="noopener noreferrer" class="launch-btn">
+                        <span data-i18n="launchBtn">الدخول</span>
+                        <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>
+                        </svg>
+                    </a>
+                </article>
+
+                <!-- ──────── Coming Soon Card ──────── -->
+                <article class="coming-soon-card">
+                    <div class="coming-soon-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <path d="M12 5v14"/><path d="M5 12h14"/>
+                        </svg>
+                    </div>
+                    <p class="coming-soon-text" data-i18n="comingSoon">قريباً</p>
+                    <p class="coming-soon-subtext" data-i18n="comingSoonSub">Coming Soon</p>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- ═══════════════ FOOTER ═══════════════ -->
+    <footer class="footer">
+        <p class="footer-text" data-i18n="footer" data-i18n-html>&copy; 2026 <strong>NJD Games</strong>. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <!-- ═══════════════ SCRIPTS ═══════════════ -->
+    <script>
+    (function() {
+        'use strict';
+
+        /* ─── Translations ─── */
+        var translations = {
+            ar: {
+                headerBadge: 'بوابة داخلية',
+                heroTitle: 'خدمات <span>نجد</span>',
+                heroDesc: 'وصولك السريع لجميع الأدوات والتطبيقات الداخلية لفريق NJD Games.',
+                statusOnline: 'متاح — Online',
+                boardPrimary: 'NJD Board',
+                boardSecondary: 'إدارة المشاريع',
+                boardDesc: 'أداة إدارة المشاريع الداخلية — تتبع المهام والتقدم ونظّم عمل الفريق بكفاءة.',
+                hrPrimary: 'NJD HR',
+                hrSecondary: 'الموارد البشرية',
+                hrDesc: 'بوابة الموارد البشرية — إدارة الحضور والإجازات وشؤون الموظفين في مكان واحد.',
+                launchBtn: 'الدخول',
+                comingSoon: 'قريباً',
+                comingSoonSub: 'Coming Soon',
+                footer: '&copy; 2026 <strong>NJD Games</strong>. جميع الحقوق محفوظة.',
+                greetMorning: 'صباح الخير 👋',
+                greetAfternoon: 'مساء الخير 👋',
+                greetEvening: 'مساء الخير 👋',
+                authTabLogin: 'تسجيل الدخول',
+                authTabRegister: 'إنشاء حساب',
+                authEmailLabel: 'البريد الإلكتروني',
+                authPasswordLabel: 'كلمة المرور',
+                authConfirmLabel: 'تأكيد كلمة المرور',
+                logoutBtn: 'خروج'
+            },
+            en: {
+                headerBadge: 'Internal Portal',
+                heroTitle: 'NJD <span>Services</span>',
+                heroDesc: 'Quick access to all internal tools and applications for the NJD Games team.',
+                statusOnline: 'Online — متاح',
+                boardPrimary: 'NJD Board',
+                boardSecondary: 'Project Management',
+                boardDesc: 'Internal project management — track tasks, progress, and organize team work efficiently.',
+                hrPrimary: 'NJD HR',
+                hrSecondary: 'Human Resources',
+                hrDesc: 'Human resources portal — manage attendance, leaves, and employee affairs in one place.',
+                launchBtn: 'Launch',
+                comingSoon: 'Coming Soon',
+                comingSoonSub: 'قريباً',
+                footer: '&copy; 2026 <strong>NJD Games</strong>. All rights reserved.',
+                greetMorning: 'Good Morning 👋',
+                greetAfternoon: 'Good Afternoon 👋',
+                greetEvening: 'Good Evening 👋',
+                authTabLogin: 'Sign In',
+                authTabRegister: 'Register',
+                authEmailLabel: 'Email',
+                authPasswordLabel: 'Password',
+                authConfirmLabel: 'Confirm Password',
+                logoutBtn: 'Logout'
+            }
+        };
+
+        var currentLang = localStorage.getItem('njd-lang') || 'ar';
+        var currentTheme = localStorage.getItem('njd-theme') || 'light';
+
+        /* ─── Apply Language ─── */
+        function applyLanguage(lang) {
+            currentLang = lang;
+            var root = document.documentElement;
+            root.setAttribute('lang', lang);
+            root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+            var t = translations[lang];
+            document.querySelectorAll('[data-i18n]').forEach(function(el) {
+                var key = el.getAttribute('data-i18n');
+                if (t[key] !== undefined) {
+                    if (el.hasAttribute('data-i18n-html')) {
+                        el.innerHTML = t[key];
+                    } else {
+                        el.textContent = t[key];
+                    }
+                }
+            });
+
+            // Update greeting
+            updateGreeting();
+
+            // Update language toggle buttons
+            document.querySelectorAll('.lang-btn').forEach(function(btn) {
+                var isActive = btn.getAttribute('data-lang') === lang;
+                btn.classList.toggle('active', isActive);
+                btn.setAttribute('aria-checked', isActive);
+            });
+
+            // Update page title
+            document.title = lang === 'ar'
+                ? 'NJD Games — خدمات نجد'
+                : 'NJD Games — NJD Services';
+
+            localStorage.setItem('njd-lang', lang);
+        }
+
+        /* ─── Apply Theme ─── */
+        function applyTheme(theme) {
+            currentTheme = theme;
+            document.documentElement.classList.add('theme-transitioning');
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('njd-theme', theme);
+            setTimeout(function() {
+                document.documentElement.classList.remove('theme-transitioning');
+            }, 450);
+        }
+
+        /* ─── Greeting ─── */
+        function updateGreeting() {
+            var el = document.getElementById('greeting');
+            var h = new Date().getHours();
+            var t = translations[currentLang];
+            if (h >= 5 && h < 12) {
+                el.textContent = t.greetMorning;
+            } else if (h >= 12 && h < 18) {
+                el.textContent = t.greetAfternoon;
+            } else {
+                el.textContent = t.greetEvening;
+            }
+        }
+
+        /* ─── Header scroll ─── */
+        var header = document.getElementById('header');
+        var ticking = false;
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(function() {
+                    header.classList.toggle('scrolled', window.scrollY > 10);
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        /* ─── Event Listeners ─── */
+        // Language toggle
+        document.querySelectorAll('.lang-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var lang = this.getAttribute('data-lang');
+                if (lang !== currentLang) {
+                    applyLanguage(lang);
+                }
+            });
+        });
+
+        // Theme toggle
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            applyTheme(currentTheme === 'light' ? 'dark' : 'light');
+        });
+
+        /* ─── Initialize ─── */
+        // Apply saved theme without transition on load
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        applyLanguage(currentLang);
+
+    })();
+    </script>
+
+    <!-- ═══════════════ SUPABASE AUTH ═══════════════ -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    (function() {
+        'use strict';
+
+        /* ─── Supabase Config ─── */
+        var SUPABASE_URL = 'https://iauulqfgrbegwcnfatmx.supabase.co';
+        var SUPABASE_KEY = 'sb_publishable_Dvk_dI_FY6oxhyOw7__06Q_wzDmwguJ';
+
+        /* ─── Cookie Storage for Cross-Subdomain Sessions ─── */
+        var isNjdDomain = location.hostname === 'njd-services.net' || location.hostname.endsWith('.njd-services.net');
+        var cookieDomain = isNjdDomain ? '; domain=.njd-services.net' : '';
+        var cookieSecure = location.protocol === 'https:' ? '; Secure' : '';
+
+        var cookieStorage = {
+            getItem: function(key) {
+                var cookies = document.cookie.split('; ');
+                for (var i = 0; i < cookies.length; i++) {
+                    var parts = cookies[i].split('=');
+                    if (decodeURIComponent(parts[0]) === key) {
+                        return decodeURIComponent(parts.slice(1).join('='));
+                    }
+                }
+                return null;
+            },
+            setItem: function(key, value) {
+                document.cookie = encodeURIComponent(key) + '=' + encodeURIComponent(value)
+                    + cookieDomain + '; path=/; max-age=31536000; SameSite=Lax' + cookieSecure;
+            },
+            removeItem: function(key) {
+                document.cookie = encodeURIComponent(key) + '=; path=/' + cookieDomain
+                    + '; max-age=0; SameSite=Lax' + cookieSecure;
+            }
+        };
+
+        /* ─── Initialize Supabase Client ─── */
+        var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+            auth: {
+                storage: cookieStorage,
+                storageKey: 'njd-auth-token',
+                autoRefreshToken: true,
+                persistSession: true,
+                detectSessionInUrl: true
+            }
+        });
+
+        /* ─── DOM Elements ─── */
+        var authOverlay = document.getElementById('authOverlay');
+        var authForm = document.getElementById('authForm');
+        var authEmail = document.getElementById('authEmail');
+        var authPassword = document.getElementById('authPassword');
+        var authConfirm = document.getElementById('authConfirm');
+        var authConfirmField = document.getElementById('authConfirmField');
+        var authError = document.getElementById('authError');
+        var authInfo = document.getElementById('authInfo');
+        var authSubmit = document.getElementById('authSubmit');
+        var authSubmitText = authSubmit.querySelector('.auth-submit-text');
+        var authSpinner = authSubmit.querySelector('.auth-spinner');
+        var logoutBtn = document.getElementById('logoutBtn');
+
+        /* ─── Password Toggle ─── */
+        document.querySelectorAll('.password-toggle').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var input = this.parentElement.querySelector('input');
+                var isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                this.querySelector('.eye-icon').style.display = isPassword ? 'none' : '';
+                this.querySelector('.eye-off-icon').style.display = isPassword ? '' : 'none';
+            });
+        });
+
+        /* ─── Auth State ─── */
+        var authMode = 'login';
+
+        /* ─── Bilingual Auth Messages ─── */
+        function getLang() {
+            return localStorage.getItem('njd-lang') || 'ar';
+        }
+
+        var authTexts = {
+            ar: {
+                loginBtn: 'تسجيل الدخول',
+                registerBtn: 'إنشاء حساب',
+                emailDomainError: 'يُسمح فقط بعناوين البريد @njdstudio.net للتسجيل',
+                passwordMismatch: 'كلمتا المرور غير متطابقتين',
+                registerSuccess: 'تم إرسال رابط التأكيد إلى بريدك الإلكتروني. يرجى تفعيل حسابك أولاً.',
+                invalidCredentials: 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
+                emailNotConfirmed: 'لم يتم تأكيد البريد الإلكتروني بعد. تحقق من صندوق الوارد.',
+                alreadyRegistered: 'هذا البريد الإلكتروني مسجل بالفعل. حاول تسجيل الدخول.',
+                passwordShort: 'كلمة المرور قصيرة جداً. يجب أن تكون 6 أحرف على الأقل.',
+                rateLimited: 'محاولات كثيرة جداً. انتظر قليلاً ثم حاول مرة أخرى.',
+                genericError: 'حدث خطأ غير متوقع. حاول مرة أخرى.'
+            },
+            en: {
+                loginBtn: 'Sign In',
+                registerBtn: 'Register',
+                emailDomainError: 'Only @njdstudio.net email addresses are allowed to register',
+                passwordMismatch: 'Passwords do not match',
+                registerSuccess: 'A confirmation link has been sent to your email. Please verify your account first.',
+                invalidCredentials: 'Invalid email or password',
+                emailNotConfirmed: 'Email not confirmed yet. Check your inbox.',
+                alreadyRegistered: 'This email is already registered. Try signing in.',
+                passwordShort: 'Password is too short. Must be at least 6 characters.',
+                rateLimited: 'Too many attempts. Please wait and try again.',
+                genericError: 'An unexpected error occurred. Please try again.'
+            }
+        };
+
+        function t(key) {
+            var lang = getLang();
+            return (authTexts[lang] || authTexts.ar)[key];
+        }
+
+        /* ─── Show/Hide Portal ─── */
+        function showPortal() {
+            authOverlay.classList.add('hidden');
+            logoutBtn.style.display = 'flex';
+        }
+
+        function showAuth() {
+            authOverlay.classList.remove('hidden');
+            logoutBtn.style.display = 'none';
+        }
+
+        /* ─── Error Mapping ─── */
+        function getErrorMessage(error) {
+            var msg = (error.message || '').toLowerCase();
+            if (msg.includes('invalid login credentials') || msg.includes('invalid_credentials')) return t('invalidCredentials');
+            if (msg.includes('email not confirmed')) return t('emailNotConfirmed');
+            if (msg.includes('user already registered') || msg.includes('already been registered')) return t('alreadyRegistered');
+            if (msg.includes('password') && (msg.includes('short') || msg.includes('least') || msg.includes('characters'))) return t('passwordShort');
+            if (msg.includes('rate limit') || msg.includes('too many') || msg.includes('exceeded')) return t('rateLimited');
+            return t('genericError');
+        }
+
+        /* ─── Update Submit Button Text ─── */
+        function updateSubmitText() {
+            authSubmitText.textContent = authMode === 'login' ? t('loginBtn') : t('registerBtn');
+        }
+
+        /* ─── Loading State ─── */
+        function setLoading(loading) {
+            authSubmit.disabled = loading;
+            authSubmitText.style.display = loading ? 'none' : '';
+            authSpinner.style.display = loading ? '' : 'none';
+        }
+
+        /* ─── Tab Switching ─── */
+        document.querySelectorAll('.auth-tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                authMode = this.getAttribute('data-tab');
+                document.querySelectorAll('.auth-tab').forEach(function(t) { t.classList.remove('active'); });
+                this.classList.add('active');
+                updateSubmitText();
+                authError.textContent = '';
+                authInfo.style.display = 'none';
+                authPassword.setAttribute('autocomplete', authMode === 'login' ? 'current-password' : 'new-password');
+                authConfirmField.style.display = authMode === 'register' ? 'block' : '';
+                authConfirm.required = authMode === 'register';
+                if (authMode === 'login') authConfirm.value = '';
+            });
+        });
+
+        /* ─── Form Submission ─── */
+        authForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var email = authEmail.value.trim();
+            var password = authPassword.value;
+
+            authError.textContent = '';
+            authInfo.style.display = 'none';
+
+            if (authMode === 'register' && !email.endsWith('@njdstudio.net')) {
+                authError.textContent = t('emailDomainError');
+                return;
+            }
+
+            if (authMode === 'register' && password !== authConfirm.value) {
+                authError.textContent = t('passwordMismatch');
+                return;
+            }
+
+            setLoading(true);
+
+            var authPromise;
+            if (authMode === 'login') {
+                authPromise = sb.auth.signInWithPassword({ email: email, password: password });
+            } else {
+                authPromise = sb.auth.signUp({ email: email, password: password });
+            }
+
+            authPromise.then(function(result) {
+                setLoading(false);
+                if (result.error) {
+                    authError.textContent = getErrorMessage(result.error);
+                    return;
+                }
+                if (authMode === 'register') {
+                    if (result.data.user && !result.data.session) {
+                        authInfo.textContent = t('registerSuccess');
+                        authInfo.style.display = '';
+                    } else if (result.data.session) {
+                        showPortal();
+                    }
+                } else {
+                    showPortal();
+                }
+            }).catch(function() {
+                setLoading(false);
+                authError.textContent = t('genericError');
+            });
+        });
+
+        /* ─── Logout ─── */
+        logoutBtn.addEventListener('click', function() {
+            sb.auth.signOut().then(function() {
+                showAuth();
+            });
+        });
+
+        /* ─── Auth State Change Listener ─── */
+        sb.auth.onAuthStateChange(function(event, session) {
+            if (event === 'SIGNED_IN' && session) {
+                showPortal();
+            } else if (event === 'SIGNED_OUT') {
+                showAuth();
+            }
+        });
+
+        /* ─── Initial Session Check ─── */
+        sb.auth.getSession().then(function(result) {
+            if (result.data.session) {
+                showPortal();
+            }
+        }).catch(function() {
+            // Session check failed, keep auth screen visible
+        });
+
+        updateSubmitText();
+
+    })();
+    </script>
+</body>
+</html>
