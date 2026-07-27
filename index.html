@@ -1845,6 +1845,8 @@
                     <div class="profile-field"><span class="profile-label" id="prLblMarital">الحالة الاجتماعية</span><select class="profile-input" id="prMarital"></select></div>
                     <div class="profile-field"><span class="profile-label" id="prLblNationality">الجنسية</span><input class="profile-input" id="prNationality" type="text"></div>
                     <div class="profile-field"><span class="profile-label" id="prLblGender">الجنس</span><select class="profile-input" id="prGender"></select></div>
+                    <div class="profile-field"><span class="profile-label" id="prLblNationalId">رقم الهوية/الإقامة</span><input class="profile-input" id="prNationalId" type="text" dir="ltr"></div>
+                    <div class="profile-field"><span class="profile-label" id="prLblPassport">رقم الجواز</span><input class="profile-input" id="prPassport" type="text" dir="ltr"></div>
                 </div>
             </div>
 
@@ -1856,6 +1858,18 @@
                     <div class="profile-field"><span class="profile-label" id="prLblDept">القسم</span><select class="profile-input" id="prDept"><option value="">—</option></select></div>
                     <div class="profile-field"><span class="profile-label" id="prLblStartDate">تاريخ بداية العمل</span><input class="profile-input" id="prStartDate" type="date"></div>
                     <div class="profile-field"><span class="profile-label" id="prLblMajor">التخصص الجامعي</span><input class="profile-input" id="prMajor" type="text"></div>
+                </div>
+            </div>
+
+            <!-- Financial / Salary -->
+            <div class="profile-card">
+                <h2 class="profile-card-title"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2" ry="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg><span id="profileCardSalary">البيانات المالية والراتب</span></h2>
+                <div class="profile-grid">
+                    <div class="profile-field full-width"><span class="profile-label" id="prLblIban">رقم الآيبان (IBAN)</span><input class="profile-input" id="prIban" type="text" dir="ltr" placeholder="SA00 0000 0000 0000 0000 0000"></div>
+                    <div class="profile-field"><span class="profile-label" id="prLblBaseSalary">الراتب الأساسي (ر.س)</span><input class="profile-input" id="prBaseSalary" type="number" min="0" step="1" dir="ltr"></div>
+                    <div class="profile-field"><span class="profile-label" id="prLblHousing">بدل السكن (ر.س)</span><input class="profile-input" id="prHousing" type="number" min="0" step="1" dir="ltr"></div>
+                    <div class="profile-field"><span class="profile-label" id="prLblOther">بدلات أخرى (ر.س)</span><input class="profile-input" id="prOther" type="number" min="0" step="1" dir="ltr"></div>
+                    <div class="profile-field"><span class="profile-label" id="prLblIsSaudi">خاضع للتأمينات (سعودي)</span><select class="profile-input" id="prIsSaudi"></select></div>
                 </div>
             </div>
 
@@ -2481,7 +2495,7 @@
         function loadDepartments() {
             var sel = document.getElementById('pDept');
             var empty = document.getElementById('pDeptEmpty');
-            sb.from('departments').select('name_ar, name_en').order('name_ar').then(function(r) {
+            sb.from('departments').select('id, name_ar, name_en').order('name_ar').then(function(r) {
                 if (!r.data || r.data.length === 0) {
                     empty.style.display = '';
                     sel.disabled = true;
@@ -2492,7 +2506,7 @@
                 var lang = getLang();
                 r.data.forEach(function(d) {
                     var o = document.createElement('option');
-                    o.value = lang === 'ar' ? d.name_ar : d.name_en;
+                    o.value = d.id;
                     o.textContent = lang === 'ar' ? d.name_ar : d.name_en;
                     sel.appendChild(o);
                 });
@@ -2746,8 +2760,9 @@
 
                 return sb.auth.getSession().then(function(result) {
                     if (!result.data.session) return;
+                    var uid = result.data.session.user.id;
                     return sb.from('profiles').upsert({
-                        id: result.data.session.user.id,
+                        id: uid,
                         name_ar: firstWord(fullAr),
                         name_en: firstWord(fullEn),
                         full_name_ar: fullAr,
@@ -2775,6 +2790,27 @@
                         degree_file: wizUploads.degree_file || null,
                         profile_completed: true,
                         updated_at: new Date().toISOString()
+                    }).then(function(up) {
+                        if (up.error) return up;
+                        // Mirror uploaded documents into employee_documents —
+                        // the shared table both the HR admin card and the
+                        // profile page read.
+                        var docMap = { iqama_file: 'national_id', passport_file: 'passport', cv_file: 'cv', degree_file: 'degree' };
+                        var docRows = [];
+                        Object.keys(docMap).forEach(function(k) {
+                            if (wizUploads[k]) {
+                                docRows.push({
+                                    employee_id: uid,
+                                    doc_type: docMap[k],
+                                    file_name: wizUploads[k].split('/').pop(),
+                                    file_path: wizUploads[k]
+                                });
+                            }
+                        });
+                        if (!docRows.length) return up;
+                        return sb.from('employee_documents')
+                            .upsert(docRows, { onConflict: 'employee_id,doc_type' })
+                            .then(function() { return up; });
                     });
                 });
             }).then(function(r) {
@@ -3262,6 +3298,14 @@
             document.getElementById('prLblDept').textContent = ar ? 'القسم' : 'Department';
             document.getElementById('prLblStartDate').textContent = ar ? 'تاريخ بداية العمل' : 'Start Date';
             document.getElementById('prLblMajor').textContent = ar ? 'التخصص الجامعي' : 'University Major';
+            document.getElementById('prLblNationalId').textContent = ar ? 'رقم الهوية/الإقامة' : 'National ID / Iqama No.';
+            document.getElementById('prLblPassport').textContent = ar ? 'رقم الجواز' : 'Passport Number';
+            document.getElementById('profileCardSalary').textContent = ar ? 'البيانات المالية والراتب' : 'Financial & Salary';
+            document.getElementById('prLblIban').textContent = ar ? 'رقم الآيبان (IBAN)' : 'IBAN';
+            document.getElementById('prLblBaseSalary').textContent = ar ? 'الراتب الأساسي (ر.س)' : 'Base Salary (SAR)';
+            document.getElementById('prLblHousing').textContent = ar ? 'بدل السكن (ر.س)' : 'Housing Allowance (SAR)';
+            document.getElementById('prLblOther').textContent = ar ? 'بدلات أخرى (ر.س)' : 'Other Allowances (SAR)';
+            document.getElementById('prLblIsSaudi').textContent = ar ? 'خاضع للتأمينات (سعودي)' : 'Subject to GOSI (Saudi)';
             document.getElementById('profileSaveBtn').textContent = ar ? 'حفظ التغييرات' : 'Save Changes';
             document.getElementById('profileHint').textContent = ar ? 'بعد التعديل اضغط حفظ — الترجمة للغة الأخرى تتم تلقائياً.' : 'Press Save after editing — translation to the other language is automatic.';
             document.getElementById('profileTranslatingText').textContent = ar ? 'جاري الترجمة...' : 'Translating...';
@@ -3325,6 +3369,20 @@
             document.getElementById('prMarital').value = p.marital_status || '';
             document.getElementById('prNationality').value = p.nationality || '';
             document.getElementById('prGender').value = p.gender || '';
+            document.getElementById('prNationalId').value = p.national_id || '';
+            document.getElementById('prPassport').value = p.passport_number || '';
+
+            // Financial — editable per owner decision (2026-07): employees
+            // manage their own banking + salary fields.
+            document.getElementById('prIban').value = p.iban || '';
+            document.getElementById('prBaseSalary').value = p.base_salary != null ? p.base_salary : '';
+            document.getElementById('prHousing').value = p.housing_allowance != null ? p.housing_allowance : '';
+            document.getElementById('prOther').value = p.other_allowances != null ? p.other_allowances : '';
+            var saudiSel = document.getElementById('prIsSaudi');
+            saudiSel.innerHTML = '<option value="">' + (ar ? 'غير محدد' : 'Unknown') + '</option>'
+                + '<option value="yes">' + (ar ? 'نعم — يُحسم 9.75%' : 'Yes — 9.75% deducted') + '</option>'
+                + '<option value="no">' + (ar ? 'لا — لا حسم' : 'No — no deduction') + '</option>';
+            saudiSel.value = p.is_saudi === true ? 'yes' : p.is_saudi === false ? 'no' : '';
 
             // Job — show current language
             document.getElementById('prJob').value = ar ? (p.job_title_ar || '') : (p.job_title_en || '');
@@ -3362,34 +3420,51 @@
         }
 
         function renderProfileDocs(p, lang, uid) {
+            // Single source of truth: employee_documents (shared with the HR
+            // admin documents card). Legacy profile columns (iqama_file etc.)
+            // were backfilled into this table by migration 019.
             var docFields = [
-                { key: 'iqama_file', ar: 'صورة الهوية/الإقامة', en: 'IQAMA / ID' },
-                { key: 'passport_file', ar: 'صورة الجواز', en: 'Passport' },
-                { key: 'cv_file', ar: 'السيرة الذاتية', en: 'CV' },
-                { key: 'degree_file', ar: 'صورة المؤهل الجامعي', en: 'Degree Certificate' }
+                { key: 'national_id', ar: 'صورة الهوية/الإقامة', en: 'National ID / Iqama' },
+                { key: 'passport', ar: 'صورة الجواز', en: 'Passport' },
+                { key: 'cv', ar: 'السيرة الذاتية', en: 'CV' },
+                { key: 'degree', ar: 'صورة المؤهل الجامعي', en: 'Degree Certificate' },
+                { key: 'iban', ar: 'شهادة الآيبان (البنك)', en: 'IBAN Certificate' },
+                { key: 'qiwa_contract', ar: 'عقد العمل (قوى)', en: 'Work Contract (Qiwa)' },
+                { key: 'national_address', ar: 'العنوان الوطني', en: 'National Address' }
             ];
-            var docsHtml = '';
-            docFields.forEach(function(doc) {
-                var filePath = p[doc.key];
-                var label = lang === 'ar' ? doc.ar : doc.en;
-                if (filePath) {
-                    docsHtml += '<div class="profile-doc">'
-                        + '<div class="profile-doc-info"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>' + label + '</span></div>'
-                        + '<div class="profile-doc-actions">'
-                        + '<button class="profile-doc-btn view" data-path="' + filePath + '"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> ' + (lang === 'ar' ? 'عرض' : 'View') + '</button>'
-                        + '<button class="profile-doc-btn download" data-path="' + filePath + '">' + (lang === 'ar' ? 'تحميل' : 'Download') + '</button>'
-                        + '<label class="profile-doc-btn replace">' + (lang === 'ar' ? 'استبدال' : 'Replace') + '<input type="file" data-field="' + doc.key + '" accept=".pdf,.jpg,.jpeg,.png"></label>'
-                        + '</div></div>';
-                } else {
-                    docsHtml += '<div class="profile-doc">'
-                        + '<div class="profile-doc-info"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>' + label + '</span></div>'
-                        + '<div class="profile-doc-actions">'
-                        + '<span class="profile-doc-none">' + (lang === 'ar' ? 'غير مرفوع' : 'Not uploaded') + '</span>'
-                        + '<label class="profile-doc-btn replace">' + (lang === 'ar' ? 'رفع' : 'Upload') + '<input type="file" data-field="' + doc.key + '" accept=".pdf,.jpg,.jpeg,.png"></label>'
-                        + '</div></div>';
-                }
+            sb.from('employee_documents').select('doc_type, file_name, file_path').eq('employee_id', uid).then(function(r) {
+                var rows = r.data || [];
+                var docsHtml = '';
+                docFields.forEach(function(doc) {
+                    var row = null;
+                    for (var i = 0; i < rows.length; i++) {
+                        if (rows[i].doc_type === doc.key) { row = rows[i]; break; }
+                    }
+                    var filePath = row && row.file_path;
+                    var label = lang === 'ar' ? doc.ar : doc.en;
+                    if (filePath) {
+                        docsHtml += '<div class="profile-doc">'
+                            + '<div class="profile-doc-info"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>' + label + '</span></div>'
+                            + '<div class="profile-doc-actions">'
+                            + '<button class="profile-doc-btn view" data-path="' + filePath + '"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> ' + (lang === 'ar' ? 'عرض' : 'View') + '</button>'
+                            + '<button class="profile-doc-btn download" data-path="' + filePath + '">' + (lang === 'ar' ? 'تحميل' : 'Download') + '</button>'
+                            + '<label class="profile-doc-btn replace">' + (lang === 'ar' ? 'استبدال' : 'Replace') + '<input type="file" data-field="' + doc.key + '" data-old="' + filePath + '" accept=".pdf,.jpg,.jpeg,.png"></label>'
+                            + '</div></div>';
+                    } else {
+                        docsHtml += '<div class="profile-doc">'
+                            + '<div class="profile-doc-info"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>' + label + '</span></div>'
+                            + '<div class="profile-doc-actions">'
+                            + '<span class="profile-doc-none">' + (lang === 'ar' ? 'غير مرفوع' : 'Not uploaded') + '</span>'
+                            + '<label class="profile-doc-btn replace">' + (lang === 'ar' ? 'رفع' : 'Upload') + '<input type="file" data-field="' + doc.key + '" accept=".pdf,.jpg,.jpeg,.png"></label>'
+                            + '</div></div>';
+                    }
+                });
+                document.getElementById('profileDocsGrid').innerHTML = docsHtml;
+                attachProfileDocHandlers(uid);
             });
-            document.getElementById('profileDocsGrid').innerHTML = docsHtml;
+        }
+
+        function attachProfileDocHandlers(uid) {
 
             // View buttons (eye icon — open in new tab)
             document.querySelectorAll('#profileDocsGrid .view').forEach(function(btn) {
@@ -3424,13 +3499,14 @@
                 inp.addEventListener('change', function() {
                     if (!inp.files || !inp.files[0]) return;
                     var file = inp.files[0];
-                    if (file.size > 5 * 1024 * 1024) {
-                        showProfileToast(getLang() === 'ar' ? 'حجم الملف يجب أن لا يتجاوز 5 ميجابايت' : 'File must be under 5MB', true);
+                    if (file.size > 10 * 1024 * 1024) {
+                        showProfileToast(getLang() === 'ar' ? 'حجم الملف يجب أن لا يتجاوز 10 ميجابايت' : 'File must be under 10MB', true);
                         return;
                     }
                     var field = inp.dataset.field;
-                    var ext = file.name.split('.').pop();
-                    var path = uid + '/' + field + '_' + Date.now() + '.' + ext;
+                    var oldPath = inp.dataset.old || null;
+                    var safeName = file.name.replace(/[^\w.\-؀-ۿ ]/g, '_');
+                    var path = uid + '/' + field + '/' + Date.now() + '-' + safeName;
                     var lbl = inp.parentElement;
                     lbl.style.opacity = '0.5';
                     lbl.style.pointerEvents = 'none';
@@ -3440,13 +3516,23 @@
                             lbl.style.opacity = ''; lbl.style.pointerEvents = '';
                             return;
                         }
-                        var update = {};
-                        update[field] = path;
-                        sb.from('profiles').update(update).eq('id', uid).then(function(ur) {
+                        sb.from('employee_documents').upsert({
+                            employee_id: uid,
+                            doc_type: field,
+                            file_name: file.name,
+                            file_path: path,
+                            file_size: file.size,
+                            mime_type: file.type || null,
+                            updated_at: new Date().toISOString()
+                        }, { onConflict: 'employee_id,doc_type' }).then(function(ur) {
                             lbl.style.opacity = ''; lbl.style.pointerEvents = '';
                             if (ur.error) {
                                 showProfileToast(getLang() === 'ar' ? 'فشل تحديث البيانات' : 'Update failed', true);
                                 return;
+                            }
+                            // Row points at the new file — drop the replaced one.
+                            if (oldPath && oldPath !== path) {
+                                sb.storage.from('employee-documents').remove([oldPath]);
                             }
                             showProfileToast(getLang() === 'ar' ? 'تم رفع الملف بنجاح' : 'File uploaded');
                             loadProfilePage();
@@ -3482,6 +3568,13 @@
             var translatingEl = document.getElementById('profileTranslating');
 
             function doSave(translated) {
+                var numOrNull = function(id) {
+                    var v = document.getElementById(id).value.trim();
+                    if (v === '') return null;
+                    var n = Number(v);
+                    return (isNaN(n) || n < 0) ? null : n;
+                };
+                var saudiVal = document.getElementById('prIsSaudi').value;
                 var data = {
                     phone: getFullPhone('prPhoneCC', 'prPhone'),
                     emergency_phone: getFullPhone('prEmergencyCC', 'prEmergency'),
@@ -3489,8 +3582,15 @@
                     marital_status: document.getElementById('prMarital').value || null,
                     nationality: document.getElementById('prNationality').value.trim() || null,
                     gender: document.getElementById('prGender').value || null,
+                    national_id: document.getElementById('prNationalId').value.trim() || null,
+                    passport_number: document.getElementById('prPassport').value.trim() || null,
                     department: document.getElementById('prDept').value || null,
-                    start_date: document.getElementById('prStartDate').value || null
+                    start_date: document.getElementById('prStartDate').value || null,
+                    iban: document.getElementById('prIban').value.trim() || null,
+                    base_salary: numOrNull('prBaseSalary'),
+                    housing_allowance: numOrNull('prHousing'),
+                    other_allowances: numOrNull('prOther'),
+                    is_saudi: saudiVal === 'yes' ? true : saudiVal === 'no' ? false : null
                 };
                 // Set both languages
                 if (ar) {
@@ -3871,7 +3971,11 @@
             var ar = document.getElementById('adminDeptNameAr').value.trim();
             var en = document.getElementById('adminDeptNameEn').value.trim();
             if (!ar || !en) return;
-            sb.from('departments').insert({ name_ar: ar, name_en: en, created_by: null }).then(function(r) {
+            // departments.id is text (HR app keys departments by kebab-case
+            // slugs) — generate one from the English name, with a numeric
+            // fallback if it produces nothing usable.
+            var slug = en.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || ('dept-' + Date.now());
+            sb.from('departments').insert({ id: slug, name_ar: ar, name_en: en, created_by: null }).then(function(r) {
                 if (r.error) { adminToast(r.error.message || 'Error', 'error'); return; }
                 document.getElementById('adminDeptNameAr').value = '';
                 document.getElementById('adminDeptNameEn').value = '';
