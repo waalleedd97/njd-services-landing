@@ -3505,7 +3505,12 @@
                     }
                     var field = inp.dataset.field;
                     var oldPath = inp.dataset.old || null;
-                    var safeName = file.name.replace(/[^\w.\-؀-ۿ ]/g, '_');
+                    // Supabase Storage keys must be ASCII — Arabic filenames
+                    // are rejected with InvalidKey. Keep the extension, slug
+                    // the base, fall back to 'file' if nothing survives.
+                    var nameMatch = file.name.match(/^(.*?)(\.[A-Za-z0-9]{1,10})?$/);
+                    var safeBase = (nameMatch[1] || '').replace(/[^A-Za-z0-9_-]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 60) || 'file';
+                    var safeName = safeBase + (nameMatch[2] || '');
                     var path = uid + '/' + field + '/' + Date.now() + '-' + safeName;
                     var lbl = inp.parentElement;
                     lbl.style.opacity = '0.5';
