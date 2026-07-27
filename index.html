@@ -944,6 +944,29 @@
 
         .auth-error:empty { margin-bottom: 0; }
 
+        .auth-forgot-row {
+            text-align: end;
+            margin-top: -8px;
+            margin-bottom: 14px;
+        }
+
+        .auth-forgot-row button,
+        .auth-back-link {
+            background: none;
+            border: none;
+            padding: 0;
+            color: #A78BFA;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .auth-forgot-row button:hover,
+        .auth-back-link:hover { text-decoration: underline; }
+
+        .auth-back-link { display: block; margin: 14px auto 0; }
+
         .auth-submit {
             width: 100%;
             padding: 14px;
@@ -1500,12 +1523,12 @@
             </div>
 
             <form id="authForm" method="post" action="">
-                <div class="auth-field">
+                <div class="auth-field" id="authEmailField">
                     <label for="authEmail" data-i18n="authEmailLabel">البريد الإلكتروني</label>
                     <input type="email" id="authEmail" name="email" placeholder="name@njdstudio.net" required autocomplete="username">
                 </div>
-                <div class="auth-field">
-                    <label for="authPassword" data-i18n="authPasswordLabel">كلمة المرور</label>
+                <div class="auth-field" id="authPasswordField">
+                    <label for="authPassword" id="authPasswordLabel" data-i18n="authPasswordLabel">كلمة المرور</label>
                     <div class="auth-input-wrap">
                         <input type="password" id="authPassword" name="password" placeholder="••••••••" required minlength="6" autocomplete="current-password">
                         <button type="button" class="password-toggle" aria-label="Toggle password visibility">
@@ -1513,6 +1536,9 @@
                             <svg class="eye-off-icon" viewBox="0 0 24 24" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
                         </button>
                     </div>
+                </div>
+                <div class="auth-forgot-row" id="authForgotRow">
+                    <button type="button" id="authForgotBtn" data-i18n="authForgot">نسيت كلمة المرور؟</button>
                 </div>
                 <div class="auth-field auth-confirm-field" id="authConfirmField">
                     <label for="authConfirm" data-i18n="authConfirmLabel">تأكيد كلمة المرور</label>
@@ -1530,6 +1556,7 @@
                     <div class="auth-spinner" style="display: none;"></div>
                 </button>
             </form>
+            <button type="button" class="auth-back-link" id="authBackLogin" style="display:none" data-i18n="authBackLogin">العودة لتسجيل الدخول</button>
 
             <div class="auth-info" id="authInfo" style="display: none;"></div>
         </div>
@@ -1987,6 +2014,9 @@
                 authEmailLabel: 'البريد الإلكتروني',
                 authPasswordLabel: 'كلمة المرور',
                 authConfirmLabel: 'تأكيد كلمة المرور',
+                authForgot: 'نسيت كلمة المرور؟',
+                authBackLogin: 'العودة لتسجيل الدخول',
+                authNewPasswordLabel: 'كلمة المرور الجديدة',
                 logoutBtn: 'خروج',
                 noAccessMsg: 'لم يتم تفعيل صلاحياتك بعد. تواصل مع المسؤول.',
                 profileTitle: 'أكمل بياناتك',
@@ -2074,6 +2104,9 @@
                 authEmailLabel: 'Email',
                 authPasswordLabel: 'Password',
                 authConfirmLabel: 'Confirm Password',
+                authForgot: 'Forgot your password?',
+                authBackLogin: 'Back to sign in',
+                authNewPasswordLabel: 'New Password',
                 logoutBtn: 'Logout',
                 noAccessMsg: 'Your access has not been activated yet. Contact the administrator.',
                 profileTitle: 'Complete Your Profile',
@@ -2325,6 +2358,12 @@
         var authSubmit = document.getElementById('authSubmit');
         var authSubmitText = authSubmit.querySelector('.auth-submit-text');
         var authSpinner = authSubmit.querySelector('.auth-spinner');
+        var authEmailField = document.getElementById('authEmailField');
+        var authPasswordField = document.getElementById('authPasswordField');
+        var authPasswordLabel = document.getElementById('authPasswordLabel');
+        var authForgotRow = document.getElementById('authForgotRow');
+        var authForgotBtn = document.getElementById('authForgotBtn');
+        var authBackLogin = document.getElementById('authBackLogin');
         var navbarEl = document.getElementById('header');
 
         /* ─── Password Toggle ─── */
@@ -2359,6 +2398,10 @@
                 alreadyRegistered: 'هذا البريد الإلكتروني مسجل بالفعل. حاول تسجيل الدخول.',
                 passwordShort: 'كلمة المرور قصيرة جداً. يجب أن تكون 6 أحرف على الأقل.',
                 rateLimited: 'محاولات كثيرة جداً. انتظر قليلاً ثم حاول مرة أخرى.',
+                sendResetBtn: 'إرسال رابط الاستعادة',
+                resetEmailSent: 'إذا كان هذا البريد مسجلاً لدينا، تم إرسال رابط استعادة كلمة المرور إليه. تحقق من بريدك الوارد.',
+                updatePasswordBtn: 'تحديث كلمة المرور',
+                passwordUpdated: 'تم تحديث كلمة المرور بنجاح.',
                 genericError: 'حدث خطأ غير متوقع. حاول مرة أخرى.'
             },
             en: {
@@ -2373,6 +2416,10 @@
                 alreadyRegistered: 'This email is already registered. Try signing in.',
                 passwordShort: 'Password is too short. Must be at least 6 characters.',
                 rateLimited: 'Too many attempts. Please wait and try again.',
+                sendResetBtn: 'Send Reset Link',
+                resetEmailSent: 'If this email is registered, a password reset link has been sent to it. Check your inbox.',
+                updatePasswordBtn: 'Update Password',
+                passwordUpdated: 'Password updated successfully.',
                 genericError: 'An unexpected error occurred. Please try again.'
             }
         };
@@ -2803,7 +2850,50 @@
 
         /* ─── Update Submit Button Text ─── */
         function updateSubmitText() {
-            authSubmitText.textContent = authMode === 'login' ? t('loginBtn') : t('registerBtn');
+            authSubmitText.textContent =
+                authMode === 'login' ? t('loginBtn') :
+                authMode === 'register' ? t('registerBtn') :
+                authMode === 'forgot' ? t('sendResetBtn') :
+                t('updatePasswordBtn');
+        }
+
+        /* ─── Auth Mode Switching ───
+           login | register | forgot (request reset email) | reset (set new
+           password after landing on the recovery link). forgot/reset hide the
+           tabs and toggle which fields are visible + required. */
+        var authTabsEl = document.querySelector('.auth-tabs');
+
+        function setAuthMode(mode) {
+            authMode = mode;
+            var isLogin = mode === 'login';
+            var isRegister = mode === 'register';
+            var isForgot = mode === 'forgot';
+            var isReset = mode === 'reset';
+
+            authTabsEl.style.display = (isForgot || isReset) ? 'none' : '';
+            document.querySelectorAll('.auth-tab').forEach(function(tb) {
+                tb.classList.toggle('active', tb.getAttribute('data-tab') === mode);
+            });
+
+            authEmailField.style.display = isReset ? 'none' : '';
+            authPasswordField.style.display = isForgot ? 'none' : '';
+            authConfirmField.style.display = (isRegister || isReset) ? 'block' : '';
+            authForgotRow.style.display = isLogin ? '' : 'none';
+            authBackLogin.style.display = (isForgot || isReset) ? '' : 'none';
+
+            authEmail.required = !isReset;
+            authPassword.required = !isForgot;
+            authConfirm.required = isRegister || isReset;
+            if (!authConfirm.required) authConfirm.value = '';
+
+            authPassword.setAttribute('autocomplete', isLogin ? 'current-password' : 'new-password');
+            authEmail.setAttribute('autocomplete', 'username');
+            authPasswordLabel.setAttribute('data-i18n', isReset ? 'authNewPasswordLabel' : 'authPasswordLabel');
+            applyLanguage(getLang());
+
+            authError.textContent = '';
+            authInfo.style.display = 'none';
+            updateSubmitText();
         }
 
         /* ─── Loading State ─── */
@@ -2816,18 +2906,17 @@
         /* ─── Tab Switching ─── */
         document.querySelectorAll('.auth-tab').forEach(function(tab) {
             tab.addEventListener('click', function() {
-                authMode = this.getAttribute('data-tab');
-                document.querySelectorAll('.auth-tab').forEach(function(t) { t.classList.remove('active'); });
-                this.classList.add('active');
-                updateSubmitText();
-                authError.textContent = '';
-                authInfo.style.display = 'none';
-                authPassword.setAttribute('autocomplete', authMode === 'login' ? 'current-password' : 'new-password');
-                authEmail.setAttribute('autocomplete', 'username');
-                authConfirmField.style.display = authMode === 'register' ? 'block' : '';
-                authConfirm.required = authMode === 'register';
-                if (authMode === 'login') authConfirm.value = '';
+                setAuthMode(this.getAttribute('data-tab'));
             });
+        });
+
+        /* ─── Forgot / Back-to-login Links ─── */
+        authForgotBtn.addEventListener('click', function() {
+            setAuthMode('forgot');
+        });
+        authBackLogin.addEventListener('click', function() {
+            recoveryPending = false;
+            setAuthMode('login');
         });
 
         /* ─── Form Submission ─── */
@@ -2838,6 +2927,48 @@
 
             authError.textContent = '';
             authInfo.style.display = 'none';
+
+            /* ── Forgot mode: email a recovery link ── */
+            if (authMode === 'forgot') {
+                setLoading(true);
+                sb.auth.resetPasswordForEmail(email, {
+                    redirectTo: location.origin + '/'
+                }).then(function(result) {
+                    setLoading(false);
+                    if (result.error) {
+                        authError.textContent = getErrorMessage(result.error);
+                        return;
+                    }
+                    authInfo.textContent = t('resetEmailSent');
+                    authInfo.style.display = '';
+                }).catch(function() {
+                    setLoading(false);
+                    authError.textContent = t('genericError');
+                });
+                return;
+            }
+
+            /* ── Reset mode: landed on the recovery link, set new password ── */
+            if (authMode === 'reset') {
+                if (password !== authConfirm.value) {
+                    authError.textContent = t('passwordMismatch');
+                    return;
+                }
+                setLoading(true);
+                sb.auth.updateUser({ password: password }).then(function(result) {
+                    setLoading(false);
+                    if (result.error) {
+                        authError.textContent = getErrorMessage(result.error);
+                        return;
+                    }
+                    recoveryPending = false;
+                    showPortal();
+                }).catch(function() {
+                    setLoading(false);
+                    authError.textContent = t('genericError');
+                });
+                return;
+            }
 
             if (authMode === 'register' && password !== authConfirm.value) {
                 authError.textContent = t('passwordMismatch');
@@ -2907,13 +3038,25 @@
         });
 
         /* ─── Auth State Change Listener ─── */
+        /* Set when the user lands on a recovery link — blocks the SIGNED_IN
+           auto-redirect until they actually set a new password. */
+        var recoveryPending = false;
+
         sb.auth.onAuthStateChange(function(event, session) {
             if (session) {
                 setRefreshCookie(session.refresh_token);
             }
-            if (event === 'SIGNED_IN' && session) {
+            if (event === 'PASSWORD_RECOVERY') {
+                recoveryPending = true;
+                _authResolved = true;
+                hideLoadingScreen();
+                showAuth();
+                setAuthMode('reset');
+            } else if (event === 'SIGNED_IN' && session) {
+                if (recoveryPending) return;
                 showPortal();
             } else if (event === 'SIGNED_OUT') {
+                recoveryPending = false;
                 clearRefreshCookie();
                 showAuth();
             }
@@ -2936,11 +3079,16 @@
         /* Failsafe: if auth check hasn't resolved in 2s, show login */
         setTimeout(resolveToLogin, 2000);
 
+        /* Recovery links carry type=recovery in the URL hash — never skip
+           straight to the portal; the PASSWORD_RECOVERY event handles them. */
+        var isRecoveryLink = location.hash.indexOf('type=recovery') !== -1;
+
         sb.auth.getSession().then(function(result) {
-            if (result.data.session) {
+            if (result.data.session && !isRecoveryLink) {
                 resolveToPortal();
                 return;
             }
+            if (isRecoveryLink) return;
             /* Recover from cross-subdomain refresh token cookie */
             var rt = getRefreshCookie();
             if (rt) {
