@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NJD Games — خدمات نجد</title>
+    <title>NJD Games Services</title>
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
@@ -122,6 +126,7 @@
             scroll-behavior: smooth;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            scrollbar-gutter: stable;
         }
 
         body {
@@ -164,6 +169,11 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+        }
+
+        [dir="rtl"] .header-inner {
+            direction: ltr;
+            flex-direction: row-reverse;
         }
 
         .logo {
@@ -310,7 +320,7 @@
            ═══════════════════════════════════════════ */
         .hero {
             position: relative;
-            padding: 80px 32px 60px;
+            padding: 12px 32px 60px;
             text-align: center;
             overflow: hidden;
         }
@@ -431,6 +441,9 @@
             opacity: 0;
             animation: fadeInUp 0.6s ease forwards 0.5s;
         }
+
+        [dir="rtl"] .apps-grid { direction: rtl; }
+        [dir="ltr"] .apps-grid { direction: ltr; }
 
         /* ═══════════════════════════════════════════
            APP CARD
@@ -721,7 +734,7 @@
            RESPONSIVE
            ═══════════════════════════════════════════ */
         @media (max-width: 768px) {
-            .hero { padding: 60px 20px 40px; }
+            .hero { padding: 8px 20px 40px; }
             .hero-title { font-size: 2.2rem; }
             .hero-desc { font-size: 15px; }
             .apps-section { padding: 10px 20px 60px; }
@@ -744,13 +757,16 @@
            ═══════════════════════════════════════════ */
         .auth-overlay {
             position: fixed;
-            inset: 0;
+            top: 64px;
+            left: 0;
+            right: 0;
+            bottom: 0;
             z-index: 1000;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             background: var(--white);
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
         .auth-overlay::before {
@@ -855,6 +871,20 @@
             color: var(--gray-800);
             outline: none;
             transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        }
+
+        /* RTL: password inputs right-aligned, email keeps LTR chars but right-aligned */
+        [dir="rtl"] .auth-field input {
+            direction: rtl;
+            text-align: right;
+        }
+        [dir="rtl"] .auth-field input[type="email"] {
+            direction: ltr;
+            text-align: right;
+        }
+
+        /* LTR: all inputs left-aligned */
+        [dir="ltr"] .auth-field input {
             direction: ltr;
             text-align: left;
         }
@@ -870,6 +900,7 @@
         .auth-input-wrap { position: relative; }
 
         .auth-input-wrap input { padding-right: 44px; }
+        [dir="rtl"] .auth-input-wrap input { padding-right: 16px; padding-left: 44px; }
 
         .password-toggle {
             position: absolute;
@@ -888,6 +919,7 @@
         }
 
         .password-toggle:hover { color: var(--gray-600); }
+        [dir="rtl"] .password-toggle { right: auto; left: 4px; }
 
         .password-toggle svg {
             width: 18px;
@@ -1020,10 +1052,435 @@
             .auth-card { padding: 36px 24px; }
             .logout-btn .logout-text { display: none; }
         }
+
+        /* ═══════════════════════════════════════════
+           ONBOARDING WIZARD
+           ═══════════════════════════════════════════ */
+        #profileOverlay { overflow-y: auto; align-items: flex-start; padding: 40px 20px; }
+        .wiz-card { max-width: 520px; }
+
+        .wiz-progress { display: flex; align-items: center; justify-content: center; margin-bottom: 28px; gap: 0; }
+        .wiz-dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--gray-200); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--gray-400); background: var(--white); flex-shrink: 0; transition: all 0.3s ease; }
+        .wiz-dot.done { background: var(--purple-600); border-color: var(--purple-600); color: white; }
+        .wiz-dot.current { border-color: var(--purple-600); color: var(--purple-600); }
+        .wiz-line { width: 32px; height: 2px; background: var(--gray-200); flex-shrink: 0; transition: background 0.3s ease; }
+        .wiz-line.done { background: var(--purple-600); }
+
+        .wiz-step { display: none; }
+        .wiz-step.active { display: block; }
+        .wiz-title { font-size: 16px; font-weight: 700; color: var(--gray-800); margin-bottom: 20px; text-align: center; }
+
+        .wiz-nav { display: flex; gap: 12px; margin-top: 24px; }
+        .wiz-prev { flex: 1; padding: 12px; background: transparent; border: 1px solid var(--gray-200); border-radius: var(--radius-md); font-family: 'Tajawal', sans-serif; font-size: 15px; font-weight: 600; color: var(--gray-500); cursor: pointer; transition: all 0.3s ease; }
+        .wiz-prev:hover { border-color: var(--gray-300); color: var(--gray-700); }
+        .wiz-next { flex: 2; }
+
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+        .auth-field select {
+            width: 100%; padding: 12px 16px; border: 1px solid var(--gray-200); border-radius: var(--radius-md);
+            background: var(--gray-50); font-family: 'Tajawal', sans-serif; font-size: 15px; color: var(--gray-800);
+            outline: none; appearance: none; cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: left 12px center;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        [dir="rtl"] .auth-field select { background-position: left 12px center; }
+        [dir="ltr"] .auth-field select { background-position: right 12px center; }
+        .auth-field select:focus { border-color: var(--purple-400); box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1); }
+
+        .radio-group { display: flex; gap: 16px; padding: 8px 0; }
+        .radio-label { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: var(--gray-700); cursor: pointer; }
+        .radio-label input[type="radio"] { width: 18px; height: 18px; accent-color: var(--purple-600); cursor: pointer; }
+
+        .field-prefix-wrap { position: relative; }
+        .field-prefix { position: absolute; top: 50%; transform: translateY(-50%); font-size: 13px; font-weight: 600; color: var(--gray-400); pointer-events: none; }
+        [dir="rtl"] .field-prefix { left: 14px; }
+        [dir="ltr"] .field-prefix { right: 14px; }
+        .field-prefix-wrap input { padding-left: 50px; }
+        [dir="rtl"] .field-prefix-wrap input { padding-left: 50px; padding-right: 16px; }
+
+        .phone-wrap { display: flex; border: 1px solid var(--gray-200); border-radius: var(--radius-md); overflow: hidden; background: var(--gray-50); }
+        .phone-wrap:focus-within { border-color: var(--purple-400); box-shadow: 0 0 0 3px rgba(168,85,247,0.1); }
+        .phone-wrap .phone-code { width: 92px; border: none; border-left: 1px solid var(--gray-200); background: var(--gray-50); font-family: 'Tajawal', sans-serif; font-size: 13px; color: var(--gray-600); padding: 0 6px; cursor: pointer; outline: none; appearance: none; direction: ltr; text-align: center; flex-shrink: 0; }
+        [dir="rtl"] .phone-wrap .phone-code { border-left: none; border-right: 1px solid var(--gray-200); order: 1; }
+        .phone-wrap input[type="tel"] { flex: 1; border: none; background: transparent; padding: 12px 14px; font-family: 'Tajawal', sans-serif; font-size: 15px; color: var(--gray-800); outline: none; direction: ltr; min-width: 0; }
+        [dir="rtl"] .phone-wrap input[type="tel"] { text-align: right; }
+        [dir="ltr"] .phone-wrap input[type="tel"] { text-align: left; }
+
+        .req-dot { color: #EF4444; margin-right: 2px; font-weight: 700; }
+
+        .upload-zone { border: 2px dashed var(--gray-200); border-radius: var(--radius-md); padding: 24px 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; }
+        .upload-zone:hover { border-color: var(--purple-300); background: var(--purple-50); }
+        .upload-zone.dragover { border-color: var(--purple-400); background: var(--purple-50); }
+        .upload-zone.uploaded { border-color: var(--purple-200); border-style: solid; background: var(--purple-50); }
+        .upload-zone svg { width: 28px; height: 28px; stroke: var(--gray-300); fill: none; stroke-width: 1.5; margin-bottom: 8px; }
+        .upload-zone.uploaded svg { stroke: var(--purple-600); }
+        .upload-label { font-size: 13px; color: var(--gray-400); }
+        .upload-name { font-size: 13px; color: var(--purple-700); font-weight: 600; display: none; }
+        .upload-zone.uploaded .upload-label { display: none; }
+        .upload-zone.uploaded .upload-name { display: block; }
+        .upload-bar-wrap { height: 4px; background: var(--gray-100); border-radius: 2px; margin-top: 12px; overflow: hidden; display: none; }
+        .upload-bar { height: 100%; background: var(--purple-600); border-radius: 2px; width: 0; transition: width 0.3s ease; }
+        .upload-spinner { display: none; width: 24px; height: 24px; border: 3px solid var(--purple-100); border-top-color: var(--purple-600); border-radius: 50%; animation: authSpin 0.7s linear infinite; margin: 0 auto 6px; }
+        .upload-zone.uploading svg { display: none; }
+        .upload-zone.uploading .upload-spinner { display: block; }
+        .upload-zone.uploading .upload-label { color: var(--purple-600); font-weight: 500; }
+        .upload-success { display: none; font-size: 12px; color: #059669; font-weight: 600; margin-top: 4px; }
+        .upload-zone.uploaded .upload-success { display: block; }
+        .upload-check { display: none; width: 24px; height: 24px; margin: 0 auto 6px; }
+        .upload-zone.uploaded .upload-check { display: block; }
+        .upload-zone.uploaded svg.upload-icon { display: none; }
+        .upload-zone input[type="file"] { display: none; }
+        .wiz-hint { font-size: 11px; color: var(--gray-400); margin-top: 4px; font-style: italic; }
+        .wiz-field-err { font-size: 12px; color: #EF4444; margin-top: 4px; font-weight: 500; }
+        /* Single-language form: show only current language fields */
+        /* Language-based field visibility is handled by JS in setupWizardLang() */
+        .wiz-translating { display: flex; align-items: center; gap: 8px; justify-content: center; padding: 12px; font-size: 13px; color: var(--purple-600); font-weight: 500; }
+        .wiz-translating .auth-spinner { width: 16px; height: 16px; border-width: 2px; border-color: rgba(147,51,234,0.2); border-top-color: var(--purple-600); }
+
+        /* ═══════════════════════════════════════════
+           ADMIN DASHBOARD
+           ═══════════════════════════════════════════ */
+        .admin-section { min-height: calc(100vh - 64px); background: var(--white); }
+        .admin-container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+        .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+        .admin-header h1 { font-size: 1.5rem; font-weight: 800; color: var(--gray-900); margin: 0; }
+        .admin-back { padding: 8px 20px; background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: 100px; font-family: 'Tajawal', sans-serif; font-size: 13px; font-weight: 600; color: var(--gray-600); cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
+        .admin-back:hover { background: var(--gray-200); }
+        .admin-tabs { display: flex; background: var(--gray-100); border-radius: 100px; padding: 3px; border: 1px solid var(--gray-200); margin-bottom: 28px; overflow-x: auto; }
+        .admin-tab { flex: 1; padding: 9px 12px; border: none; border-radius: 100px; background: transparent; font-family: 'Tajawal', sans-serif; font-size: 13px; font-weight: 600; color: var(--gray-400); cursor: pointer; transition: all 0.3s ease; white-space: nowrap; min-width: 0; }
+        .admin-tab.active { background: linear-gradient(135deg, var(--purple-600), var(--purple-700)); color: white; box-shadow: 0 2px 10px rgba(147, 51, 234, 0.3); }
+        .admin-panel { display: none; }
+        .admin-panel.active { display: block; }
+
+        .admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .admin-stat { background: var(--white); border: 1px solid var(--gray-100); border-radius: var(--radius-lg); padding: 20px; text-align: center; }
+        [data-theme="dark"] .admin-stat { background: var(--gray-50); }
+        .admin-stat-num { font-size: 2rem; font-weight: 800; color: var(--purple-600); }
+        .admin-stat-label { font-size: 13px; color: var(--gray-500); margin-top: 4px; }
+
+        .admin-table-wrap { overflow-x: auto; border: 1px solid var(--gray-100); border-radius: var(--radius-md); }
+        .admin-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .admin-table th { padding: 12px 14px; text-align: right; font-weight: 700; color: var(--gray-600); background: var(--gray-50); border-bottom: 1px solid var(--gray-100); white-space: nowrap; }
+        [dir="ltr"] .admin-table th { text-align: left; }
+        .admin-table td { padding: 10px 14px; border-bottom: 1px solid var(--gray-100); color: var(--gray-700); vertical-align: middle; }
+        .admin-table tr:last-child td { border-bottom: none; }
+        .admin-table tr:hover td { background: var(--gray-50); }
+        .admin-table select { padding: 4px 8px; border: 1px solid var(--gray-200); border-radius: 6px; font-family: 'Tajawal', sans-serif; font-size: 12px; background: var(--white); color: var(--gray-700); cursor: pointer; }
+        .admin-table .toggle { width: 36px; height: 20px; border-radius: 10px; border: none; cursor: pointer; position: relative; transition: background 0.3s ease; }
+        .admin-table .toggle.on { background: var(--purple-600); }
+        .admin-table .toggle.off { background: var(--gray-300); }
+        .admin-table .toggle::after { content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: white; top: 2px; transition: all 0.2s ease; }
+        .admin-table .toggle.on::after { right: 2px; }
+        .admin-table .toggle.off::after { right: calc(100% - 18px); }
+        .admin-del { padding: 4px 10px; border: 1px solid rgba(239,68,68,0.2); border-radius: 6px; background: transparent; color: #EF4444; font-family: 'Tajawal', sans-serif; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+        .admin-del:hover { background: rgba(239,68,68,0.08); }
+        .admin-badge-role { display: inline-block; padding: 2px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; }
+        .admin-badge-role.super { background: rgba(147,51,234,0.1); color: var(--purple-700); }
+        .admin-badge-role.emp { background: var(--gray-100); color: var(--gray-500); }
+
+        .admin-search { width: 100%; padding: 10px 16px; border: 1px solid var(--gray-200); border-radius: var(--radius-md); background: var(--gray-50); font-family: 'Tajawal', sans-serif; font-size: 14px; color: var(--gray-800); outline: none; margin-bottom: 16px; }
+        .admin-search:focus { border-color: var(--purple-400); box-shadow: 0 0 0 3px rgba(168,85,247,0.1); }
+
+        .admin-form-row { display: flex; gap: 12px; margin-bottom: 16px; }
+        .admin-form-row input, .admin-form-row select { flex: 1; padding: 10px 14px; border: 1px solid var(--gray-200); border-radius: var(--radius-md); background: var(--gray-50); font-family: 'Tajawal', sans-serif; font-size: 14px; color: var(--gray-800); outline: none; }
+        .admin-form-row input:focus, .admin-form-row select:focus { border-color: var(--purple-400); }
+        .admin-add-btn { padding: 10px 24px; background: linear-gradient(135deg, var(--purple-600), var(--purple-700)); color: white; border: none; border-radius: var(--radius-md); font-family: 'Tajawal', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; white-space: nowrap; }
+        .admin-add-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-purple); }
+        .admin-email-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border: 1px solid var(--gray-100); border-radius: var(--radius-md); margin-bottom: 8px; }
+        .admin-email-item span { color: var(--gray-700); font-size: 14px; }
+
+        .admin-notif-form { background: var(--gray-50); border: 1px solid var(--gray-100); border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px; }
+        .admin-notif-form label { display: block; font-size: 13px; font-weight: 600; color: var(--gray-600); margin-bottom: 4px; margin-top: 12px; }
+        .admin-notif-form label:first-child { margin-top: 0; }
+        .admin-notif-form input, .admin-notif-form select, .admin-notif-form textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--gray-200); border-radius: var(--radius-md); background: var(--white); font-family: 'Tajawal', sans-serif; font-size: 14px; color: var(--gray-800); outline: none; }
+        .admin-notif-form textarea { min-height: 60px; resize: vertical; }
+
+        .admin-modal { position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; }
+        .admin-modal-card { background: var(--white); border-radius: var(--radius-lg); padding: 28px; max-width: 380px; width: 90%; box-shadow: var(--shadow-xl); text-align: center; }
+        .admin-modal-card p { font-size: 15px; color: var(--gray-700); line-height: 1.6; margin-bottom: 20px; }
+
+        .admin-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); padding: 12px 24px; border-radius: var(--radius-md); font-family: 'Tajawal', sans-serif; font-size: 14px; font-weight: 600; z-index: 3000; animation: fadeInUp 0.3s ease; pointer-events: none; }
+        .admin-toast.success { background: #059669; color: white; }
+        .admin-toast.error { background: #EF4444; color: white; }
+
+        .admin-portal-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; background: linear-gradient(135deg, var(--purple-600), var(--purple-700)); color: white; border: none; border-radius: var(--radius-md); font-family: 'Tajawal', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .admin-portal-btn::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%; background: linear-gradient(to bottom, rgba(255,255,255,0.12), transparent); pointer-events: none; }
+        .admin-portal-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-purple); }
+        .admin-portal-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+        .admin-recent { margin-top: 24px; }
+        .admin-recent h3 { font-size: 15px; font-weight: 700; color: var(--gray-700); margin-bottom: 12px; }
+        .admin-recent-item { padding: 8px 0; border-bottom: 1px solid var(--gray-100); font-size: 13px; color: var(--gray-600); display: flex; justify-content: space-between; }
+        .admin-recent-item:last-child { border-bottom: none; }
+        .admin-empty { text-align: center; padding: 40px 20px; color: var(--gray-400); font-size: 14px; }
+
+        @media (max-width: 768px) {
+            .admin-container { padding: 20px 12px; }
+            .admin-stats { grid-template-columns: 1fr 1fr; }
+            .admin-form-row { flex-direction: column; }
+            .admin-table { font-size: 12px; }
+            .admin-table th, .admin-table td { padding: 8px 10px; }
+        }
+
+        /* ═══════════════════════════════════════════
+           PROFILE PAGE
+           ═══════════════════════════════════════════ */
+        .profile-section { min-height: calc(100vh - 64px); background: var(--white); }
+        .profile-container { max-width: 800px; margin: 0 auto; padding: 32px 24px; }
+        .profile-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+        .profile-header h1 { font-size: 1.5rem; font-weight: 800; color: var(--gray-900); margin: 0; }
+        .profile-back { padding: 8px 20px; background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: 100px; font-family: 'Tajawal', sans-serif; font-size: 13px; font-weight: 600; color: var(--gray-600); cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
+        .profile-back:hover { background: var(--gray-200); }
+        .profile-card { background: var(--white); border: 1px solid var(--gray-100); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; }
+        [data-theme="dark"] .profile-card { background: var(--gray-50); }
+        .profile-card-title { font-size: 15px; font-weight: 700; color: var(--purple-700); margin: 0 0 20px; padding-bottom: 12px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; gap: 8px; }
+        .profile-card-title svg { width: 18px; height: 18px; stroke: var(--purple-600); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 600px) { .profile-grid { grid-template-columns: 1fr; } }
+        .profile-field { display: flex; flex-direction: column; gap: 4px; }
+        .profile-field.full-width { grid-column: 1 / -1; }
+        .profile-label { font-size: 12px; font-weight: 600; color: var(--gray-400); }
+        .profile-value { font-size: 14px; font-weight: 500; color: var(--gray-800); padding: 8px 12px; background: var(--gray-50); border-radius: 8px; border: 1px solid var(--gray-100); min-height: 38px; display: flex; align-items: center; }
+        .profile-value:empty::after { content: '—'; color: var(--gray-300); }
+        .profile-input { font-size: 14px; font-weight: 500; color: var(--gray-800); padding: 8px 12px; background: var(--white); border-radius: 8px; border: 1px solid var(--gray-200); font-family: 'Tajawal', sans-serif; outline: none; transition: border-color 0.2s ease; }
+        .profile-input:focus { border-color: var(--purple-400); }
+        select.profile-input { cursor: pointer; appearance: auto; }
+        .pr-phone-wrap { display: flex; gap: 6px; }
+        .pr-phone-wrap .pr-cc { width: 120px; flex-shrink: 0; font-size: 13px; padding: 8px 6px; }
+        .pr-phone-wrap .pr-num { flex: 1; min-width: 0; }
+        [data-theme="dark"] .profile-input { background: var(--gray-100); }
+        .profile-doc { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--gray-50); border: 1px solid var(--gray-100); border-radius: 8px; }
+        .profile-doc-info { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: var(--gray-700); min-width: 0; }
+        .profile-doc-info svg { width: 16px; height: 16px; stroke: var(--purple-600); fill: none; stroke-width: 2; flex-shrink: 0; }
+        .profile-doc-actions { display: flex; gap: 6px; flex-shrink: 0; }
+        .profile-doc-btn { padding: 5px 12px; border-radius: 6px; font-family: 'Tajawal', sans-serif; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; border: none; }
+        .profile-doc-btn.view { background: var(--purple-50); color: var(--purple-700); }
+        .profile-doc-btn.view:hover { background: var(--purple-100); }
+        .profile-doc-btn.view svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; }
+        .profile-doc-btn.download { background: var(--purple-50); color: var(--purple-700); }
+        .profile-doc-btn.download:hover { background: var(--purple-100); }
+        .profile-doc-btn.replace { background: var(--gray-100); color: var(--gray-600); position: relative; overflow: hidden; }
+        .profile-doc-btn.replace:hover { background: var(--gray-200); }
+        .profile-doc-btn.replace input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+        .profile-doc-none { font-size: 12px; color: var(--gray-400); font-style: italic; }
+        .profile-save-wrap { text-align: center; margin-top: 24px; }
+        .profile-save-btn { padding: 10px 32px; background: linear-gradient(135deg, var(--purple-600), var(--purple-700)); color: white; border: none; border-radius: 100px; font-family: 'Tajawal', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(147,51,234,0.3); }
+        .profile-save-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(147,51,234,0.4); }
+        .profile-save-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .profile-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); padding: 10px 24px; background: var(--purple-700); color: white; border-radius: 100px; font-family: 'Tajawal', sans-serif; font-size: 13px; font-weight: 600; z-index: 9000; animation: fadeInUp 0.3s ease; }
+        .profile-hint { font-size: 11px; color: var(--gray-400); margin-top: 16px; text-align: center; line-height: 1.6; }
+
+        /* ═══════════════════════════════════════════
+           NOTIFICATION DROPDOWN
+           ═══════════════════════════════════════════ */
+        .notif-dropdown {
+            display: none;
+            position: fixed;
+            z-index: 200;
+            width: 250px;
+            padding: 20px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-500);
+            line-height: 1.6;
+            animation: fadeInUp 0.2s ease forwards;
+        }
+
+        .notif-dropdown.open { display: block; }
+
+        /* === NJD Loading Screen === */
+        :root {
+          --njd-loader-bg: #ffffff;
+          --njd-loader-icon: #111111;
+          --njd-loader-shadow: rgba(0, 0, 0, 0.12);
+        }
+        .dark {
+          --njd-loader-bg: #0a0a1a;
+          --njd-loader-icon: #ffffff;
+          --njd-loader-shadow: rgba(255, 255, 255, 0.1);
+        }
+
+        .njd-loader {
+          position: fixed;
+          inset: 0;
+          z-index: 9999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--njd-loader-bg);
+        }
+        .njd-loader.fade-out {
+          opacity: 0;
+          transition: opacity 0.3s ease-out;
+        }
+        .njd-loader .loader-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 24px;
+        }
+        .njd-loader .morph-container {
+          width: 120px;
+          height: 120px;
+          position: relative;
+          animation: njd-bounce-cycle 4s ease-in-out infinite;
+        }
+        .njd-loader .morph-container .logo-img,
+        .njd-loader .morph-container .car-svg {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: opacity 0.25s ease;
+        }
+        .njd-loader .logo-img .njd-text {
+          font-family: 'Arial Black', 'Helvetica Neue', sans-serif;
+          font-size: 42px;
+          font-weight: 900;
+          letter-spacing: 6px;
+          color: var(--njd-loader-icon);
+          user-select: none;
+        }
+        .njd-loader .car-svg svg {
+          width: 100px;
+          height: auto;
+        }
+        .njd-loader .car-svg svg path,
+        .njd-loader .car-svg svg circle,
+        .njd-loader .car-svg svg line,
+        .njd-loader .car-svg svg rect {
+          stroke: var(--njd-loader-icon);
+          fill: none;
+        }
+        .njd-loader .logo-img {
+          animation: njd-logo-vis 4s ease-in-out infinite;
+        }
+        .njd-loader .car-svg {
+          animation: njd-car-vis 4s ease-in-out infinite;
+        }
+        .njd-loader .bounce-shadow {
+          width: 60px;
+          height: 8px;
+          border-radius: 50%;
+          background: var(--njd-loader-shadow);
+          animation: njd-shadow-cycle 4s ease-in-out infinite;
+        }
+
+        @keyframes njd-logo-vis {
+          0%   { opacity: 1; }
+          22%  { opacity: 1; }
+          25%  { opacity: 0; }
+          72%  { opacity: 0; }
+          75%  { opacity: 1; }
+          100% { opacity: 1; }
+        }
+        @keyframes njd-car-vis {
+          0%   { opacity: 0; }
+          22%  { opacity: 0; }
+          25%  { opacity: 1; }
+          72%  { opacity: 1; }
+          75%  { opacity: 0; }
+          100% { opacity: 0; }
+        }
+        @keyframes njd-bounce-cycle {
+          0%   { transform: translateY(0) scale(1); }
+          4%   { transform: translateY(-8px) scale(1.02); }
+          8%   { transform: translateY(0) scale(1); }
+          12%  { transform: translateY(-6px) scale(1.01); }
+          16%  { transform: translateY(0) scale(1); }
+          20%  { transform: translateY(-5px) scale(1.01); }
+          22%  { transform: translateY(0) scale(1); }
+          25%  { transform: translateY(-35px) scale(0.85); }
+          28%  { transform: translateY(0) scale(1.08); }
+          31%  { transform: translateY(-4px) scale(1); }
+          33%  { transform: translateY(0) scale(1); }
+          37%  { transform: translateY(0) scale(1); }
+          40%  { transform: translateY(-8px) scale(1.02); }
+          44%  { transform: translateY(0) scale(1); }
+          48%  { transform: translateY(-6px) scale(1.01); }
+          52%  { transform: translateY(0) scale(1); }
+          56%  { transform: translateY(-8px) scale(1.02); }
+          60%  { transform: translateY(0) scale(1); }
+          64%  { transform: translateY(-5px) scale(1.01); }
+          68%  { transform: translateY(0) scale(1); }
+          72%  { transform: translateY(0) scale(1); }
+          75%  { transform: translateY(-35px) scale(0.85); }
+          78%  { transform: translateY(0) scale(1.08); }
+          81%  { transform: translateY(-4px) scale(1); }
+          83%  { transform: translateY(0) scale(1); }
+          88%  { transform: translateY(-4px) scale(1.01); }
+          92%  { transform: translateY(0) scale(1); }
+          96%  { transform: translateY(-3px) scale(1); }
+          100% { transform: translateY(0) scale(1); }
+        }
+        @keyframes njd-shadow-cycle {
+          0%   { transform: scaleX(1); opacity: 0.6; }
+          4%   { transform: scaleX(0.85); opacity: 0.4; }
+          8%   { transform: scaleX(1); opacity: 0.6; }
+          22%  { transform: scaleX(1); opacity: 0.6; }
+          25%  { transform: scaleX(0.5); opacity: 0.2; }
+          28%  { transform: scaleX(1.2); opacity: 0.7; }
+          33%  { transform: scaleX(1); opacity: 0.6; }
+          72%  { transform: scaleX(1); opacity: 0.6; }
+          75%  { transform: scaleX(0.5); opacity: 0.2; }
+          78%  { transform: scaleX(1.2); opacity: 0.7; }
+          83%  { transform: scaleX(1); opacity: 0.6; }
+          100% { transform: scaleX(1); opacity: 0.6; }
+        }
     </style>
+    <script>
+      (function(){
+        var m = document.cookie.match(/njd-theme=(\w+)/);
+        var t = m ? m[1] : null;
+        if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
 </head>
 
 <body>
+
+    <div class="njd-loader">
+      <div class="loader-content">
+        <div class="morph-container">
+          <div class="logo-img">
+            <span class="njd-text">NJD</span>
+          </div>
+          <div class="car-svg">
+            <svg viewBox="0 0 120 70" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20,42 L25,42 L30,28 L52,26 L62,18 L88,18 L96,28 L100,42 L105,42" />
+              <path d="M52,26 L55,18" />
+              <path d="M30,28 L25,28" />
+              <path d="M60,18 L58,12 L68,12 L66,18" />
+              <line x1="35" y1="42" x2="82" y2="42" />
+              <circle cx="30" cy="46" r="9" stroke-width="2.5" />
+              <circle cx="30" cy="46" r="3.5" stroke-width="1.5" />
+              <circle cx="90" cy="46" r="9" stroke-width="2.5" />
+              <circle cx="90" cy="46" r="3.5" stroke-width="1.5" />
+              <path d="M55,18 L58,26 L78,26 L88,18 Z" stroke-width="2" />
+              <line x1="65" y1="32" x2="72" y2="32" stroke-width="1.8" />
+              <path d="M12,44 Q16,42 20,44" stroke-width="1.5" opacity="0.5" />
+              <path d="M6,42 Q10,40 14,42" stroke-width="1.2" opacity="0.3" />
+            </svg>
+          </div>
+        </div>
+        <div class="bounce-shadow"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ NOTIFICATION DROPDOWN ═══════════════ -->
+    <div class="notif-dropdown" id="notifDropdown"></div>
 
     <!-- ═══════════════ AUTH SCREEN ═══════════════ -->
     <div class="auth-overlay" id="authOverlay">
@@ -1042,15 +1499,15 @@
                 <button class="auth-tab" data-tab="register" data-i18n="authTabRegister">إنشاء حساب</button>
             </div>
 
-            <form id="authForm" autocomplete="on">
+            <form id="authForm" method="post" action="">
                 <div class="auth-field">
                     <label for="authEmail" data-i18n="authEmailLabel">البريد الإلكتروني</label>
-                    <input type="email" id="authEmail" placeholder="name@njdstudio.net" required autocomplete="email">
+                    <input type="email" id="authEmail" name="email" placeholder="name@njdstudio.net" required autocomplete="username">
                 </div>
                 <div class="auth-field">
                     <label for="authPassword" data-i18n="authPasswordLabel">كلمة المرور</label>
                     <div class="auth-input-wrap">
-                        <input type="password" id="authPassword" placeholder="••••••••" required minlength="6" autocomplete="current-password">
+                        <input type="password" id="authPassword" name="password" placeholder="••••••••" required minlength="6" autocomplete="current-password">
                         <button type="button" class="password-toggle" aria-label="Toggle password visibility">
                             <svg class="eye-icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             <svg class="eye-off-icon" viewBox="0 0 24 24" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
@@ -1060,7 +1517,7 @@
                 <div class="auth-field auth-confirm-field" id="authConfirmField">
                     <label for="authConfirm" data-i18n="authConfirmLabel">تأكيد كلمة المرور</label>
                     <div class="auth-input-wrap">
-                        <input type="password" id="authConfirm" placeholder="••••••••" minlength="6" autocomplete="new-password">
+                        <input type="password" id="authConfirm" name="confirm-password" placeholder="••••••••" minlength="6" autocomplete="new-password">
                         <button type="button" class="password-toggle" aria-label="Toggle password visibility">
                             <svg class="eye-icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             <svg class="eye-off-icon" viewBox="0 0 24 24" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
@@ -1078,56 +1535,114 @@
         </div>
     </div>
 
-    <!-- ═══════════════ HEADER ═══════════════ -->
-    <header class="header" id="header">
-        <div class="header-inner">
-            <div class="logo">
-                <img src="logo.png" alt="NJD Games" class="logo-img">
+    <!-- ═══════════════ ONBOARDING WIZARD ═══════════════ -->
+    <div class="auth-overlay" id="profileOverlay" style="display: none;">
+        <div class="auth-card wiz-card">
+            <div class="auth-logo"><img src="logo.png" alt="NJD Games" class="logo-img"></div>
+
+            <div class="wiz-progress">
+                <span class="wiz-dot current" data-s="1">1</span><span class="wiz-line"></span>
+                <span class="wiz-dot" data-s="2">2</span><span class="wiz-line"></span>
+                <span class="wiz-dot" data-s="3">3</span><span class="wiz-line"></span>
+                <span class="wiz-dot" data-s="4">4</span>
             </div>
 
-            <div class="header-controls">
-                <!-- Language Toggle -->
-                <div class="lang-toggle" role="radiogroup" aria-label="Switch language">
-                    <button class="lang-btn active" data-lang="ar" role="radio" aria-checked="true">عربي</button>
-                    <button class="lang-btn" data-lang="en" role="radio" aria-checked="false">EN</button>
+            <form id="profileForm">
+                <!-- Step 1: Name -->
+                <div class="wiz-step active" data-step="1">
+                    <p class="wiz-title" data-i18n="wizStep1">الاسم</p>
+                    <div class="auth-field wiz-en-only"><label><span class="req-dot">*</span> <span data-i18n="wizFullNameAr">الاسم الرباعي</span></label><input type="text" id="pFullNameAr" data-i18n-ph="wizFullNameArPh" placeholder="مثال: وليد عايض سيف القحطاني"><p class="wiz-field-err" id="pFullNameArErr" style="display:none;" data-i18n="wizName4">الاسم يجب أن يتكون من 4 أسماء</p></div>
+                    <div class="auth-field wiz-ar-only"><label><span class="req-dot">*</span> <span data-i18n="wizFullNameEn">Full Name</span></label><input type="text" id="pFullNameEn" placeholder="e.g. Waleed Ayidh Saif Alqahtani" style="direction:ltr;text-align:left;"><p class="wiz-field-err" id="pFullNameEnErr" style="display:none;" data-i18n="wizName4">الاسم يجب أن يتكون من 4 أسماء</p></div>
                 </div>
 
-                <!-- Theme Toggle -->
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                    <!-- Sun -->
-                    <svg class="theme-icon sun-icon" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="5"/>
-                        <line x1="12" y1="1" x2="12" y2="3"/>
-                        <line x1="12" y1="21" x2="12" y2="23"/>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                        <line x1="1" y1="12" x2="3" y2="12"/>
-                        <line x1="21" y1="12" x2="23" y2="12"/>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                    </svg>
-                    <!-- Moon -->
-                    <svg class="theme-icon moon-icon" viewBox="0 0 24 24">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                    </svg>
-                </button>
-
-                <!-- Badge -->
-                <div class="header-badge">
-                    <span class="header-badge-dot"></span>
-                    <span data-i18n="headerBadge">بوابة داخلية</span>
+                <!-- Step 2: Personal Info -->
+                <div class="wiz-step" data-step="2">
+                    <p class="wiz-title" data-i18n="wizStep2">البيانات الشخصية</p>
+                    <div class="field-row">
+                        <div class="auth-field"><label data-i18n="wizNationalId">رقم الهوية/الإقامة</label><input type="text" id="pNationalId" inputmode="numeric" pattern="[0-9]*" placeholder="1234567890"></div>
+                        <div class="auth-field"><label data-i18n="wizPassport">رقم الجواز</label><input type="text" id="pPassportNum" placeholder="A12345678"></div>
+                    </div>
+                    <div class="field-row">
+                        <div class="auth-field"><label><span class="req-dot">*</span> <span data-i18n="wizDob">تاريخ الميلاد</span></label><input type="date" id="pDob" required></div>
+                        <div class="auth-field"><label><span class="req-dot">*</span> <span data-i18n="wizNationality">الجنسية</span></label><input type="text" id="pNationality" data-i18n-ph="wizNationalityPh" placeholder="مثال: سعودي" required></div>
+                    </div>
+                    <div class="field-row">
+                        <div class="auth-field"><label><span class="req-dot">*</span> <span data-i18n="wizMarital">الحالة الاجتماعية</span></label>
+                            <select id="pMarital" required><option value="" disabled selected data-i18n="wizChoose">اختر</option><option value="single" data-i18n="wizSingle">أعزب/عزباء</option><option value="married" data-i18n="wizMarried">متزوج/ة</option></select>
+                        </div>
+                        <div class="auth-field"><label><span class="req-dot">*</span> <span data-i18n="wizGender">الجنس</span></label>
+                            <div class="radio-group"><label class="radio-label"><input type="radio" name="gender" value="male" required> <span data-i18n="wizMale">ذكر</span></label><label class="radio-label"><input type="radio" name="gender" value="female"> <span data-i18n="wizFemale">أنثى</span></label></div>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="auth-field"><label><span class="req-dot">*</span> <span data-i18n="wizPhone">رقم الجوال</span></label>
+                            <div class="phone-wrap"><select class="phone-code" id="pPhoneCode"><option value="+966">🇸🇦 +966</option><option value="+971">🇦🇪 +971</option><option value="+20">🇪🇬 +20</option><option value="+962">🇯🇴 +962</option><option value="+961">🇱🇧 +961</option><option value="+212">🇲🇦 +212</option><option value="+91">🇮🇳 +91</option><option value="+92">🇵🇰 +92</option><option value="+63">🇵🇭 +63</option><option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option></select><input type="tel" id="pPhone" placeholder="5XXXXXXXX" required></div>
+                        </div>
+                        <div class="auth-field"><label data-i18n="wizEmergPhone">رقم جوال الطوارئ</label>
+                            <div class="phone-wrap"><select class="phone-code" id="pEmergPhoneCode"><option value="+966">🇸🇦 +966</option><option value="+971">🇦🇪 +971</option><option value="+20">🇪🇬 +20</option><option value="+962">🇯🇴 +962</option><option value="+961">🇱🇧 +961</option><option value="+212">🇲🇦 +212</option><option value="+91">🇮🇳 +91</option><option value="+92">🇵🇰 +92</option><option value="+63">🇵🇭 +63</option><option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option></select><input type="tel" id="pEmergPhone" placeholder="5XXXXXXXX"></div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Logout -->
-                <button class="logout-btn" id="logoutBtn">
-                    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                    <span class="logout-text" data-i18n="logoutBtn">خروج</span>
-                </button>
-            </div>
+                <!-- Step 3: Job Info -->
+                <div class="wiz-step" data-step="3">
+                    <p class="wiz-title" data-i18n="wizStep3">البيانات الوظيفية</p>
+                    <div class="auth-field wiz-en-only"><label data-i18n="wizJobAr">المسمى الوظيفي</label><input type="text" id="pJobAr" data-i18n-ph="wizJobArPh" placeholder="مثال: مطور تطبيقات"></div>
+                    <div class="auth-field wiz-ar-only"><label data-i18n="wizJobEn">Job Title</label><input type="text" id="pJobEn" placeholder="e.g. App Developer" style="direction:ltr;text-align:left;"></div>
+                    <div class="auth-field wiz-en-only"><label><span class="req-dot">*</span> <span data-i18n="wizMajorAr">التخصص الجامعي</span></label><input type="text" id="pMajorAr" data-i18n-ph="wizMajorArPh" placeholder="مثال: علوم حاسب"></div>
+                    <div class="auth-field wiz-ar-only"><label><span class="req-dot">*</span> <span data-i18n="wizMajorEn">University Major</span></label><input type="text" id="pMajorEn" placeholder="e.g. Computer Science" style="direction:ltr;text-align:left;"></div>
+                    <div class="field-row">
+                        <div class="auth-field"><label data-i18n="wizDept">القسم/الإدارة</label><select id="pDept"><option value="" disabled selected data-i18n="wizChoose">اختر</option></select><p id="pDeptEmpty" style="display:none;font-size:12px;color:var(--gray-400);margin-top:4px;" data-i18n="wizNoDepts">لم يتم إضافة أقسام بعد. تواصل مع المسؤول.</p></div>
+                        <div class="auth-field"><label data-i18n="wizStartDate">تاريخ بداية العمل</label><input type="date" id="pStartDate"></div>
+                    </div>
+                    <div class="field-row">
+                        <div class="auth-field"><label data-i18n="wizSalary">الراتب الأساسي</label>
+                            <div class="phone-wrap"><span style="padding:0 10px;display:flex;align-items:center;font-size:13px;font-weight:600;color:var(--gray-400);border-left:1px solid var(--gray-200);flex-shrink:0;" data-i18n="wizSAR">ريال</span><input type="text" inputmode="numeric" id="pSalary" placeholder="0" style="border:none;background:transparent;padding:12px 14px;flex:1;direction:ltr;text-align:left;font-family:'Tajawal',sans-serif;font-size:15px;color:var(--gray-800);outline:none;min-width:0;"></div>
+                        </div>
+                        <div class="auth-field"><label data-i18n="wizAllowances">العلاوات الإضافية</label>
+                            <div class="phone-wrap"><span style="padding:0 10px;display:flex;align-items:center;font-size:13px;font-weight:600;color:var(--gray-400);border-left:1px solid var(--gray-200);flex-shrink:0;" data-i18n="wizSAR">ريال</span><input type="text" inputmode="numeric" id="pAllowances" placeholder="0" value="0" style="border:none;background:transparent;padding:12px 14px;flex:1;direction:ltr;text-align:left;font-family:'Tajawal',sans-serif;font-size:15px;color:var(--gray-800);outline:none;min-width:0;"></div>
+                        </div>
+                    </div>
+                    <div class="auth-field"><label>IBAN</label><input type="text" id="pIban" placeholder="SA..." style="direction:ltr;text-align:left;"></div>
+                </div>
+
+                <!-- Step 4: Documents -->
+                <div class="wiz-step" data-step="4">
+                    <p class="wiz-title" data-i18n="wizStep4">المستندات</p>
+                    <div class="field-row">
+                        <div class="auth-field"><label data-i18n="wizIqama">صورة الهوية/الإقامة</label><span class="wiz-hint">PDF, JPG, PNG</span>
+                            <div class="upload-zone" data-field="iqama_file"><input type="file" accept=".pdf,.jpg,.jpeg,.png"><div class="upload-spinner"></div><svg class="upload-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><svg class="upload-check" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><div class="upload-label" data-i18n="wizUpload">اسحب الملف أو اضغط للرفع</div><div class="upload-name"></div><div class="upload-success" data-i18n="wizUploadSuccess">تم الرفع بنجاح</div><div class="upload-bar-wrap"><div class="upload-bar"></div></div></div>
+                        </div>
+                        <div class="auth-field"><label data-i18n="wizPassportFile">صورة الجواز</label><span class="wiz-hint">PDF, JPG, PNG</span>
+                            <div class="upload-zone" data-field="passport_file"><input type="file" accept=".pdf,.jpg,.jpeg,.png"><div class="upload-spinner"></div><svg class="upload-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><svg class="upload-check" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><div class="upload-label" data-i18n="wizUpload">اسحب الملف أو اضغط للرفع</div><div class="upload-name"></div><div class="upload-success" data-i18n="wizUploadSuccess">تم الرفع بنجاح</div><div class="upload-bar-wrap"><div class="upload-bar"></div></div></div>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="auth-field"><label><span class="req-dot">*</span> <span data-i18n="wizCV">السيرة الذاتية CV</span></label><span class="wiz-hint">PDF</span>
+                            <div class="upload-zone" data-field="cv_file"><input type="file" accept=".pdf"><div class="upload-spinner"></div><svg class="upload-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><svg class="upload-check" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><div class="upload-label" data-i18n="wizUpload">اسحب الملف أو اضغط للرفع</div><div class="upload-name"></div><div class="upload-success" data-i18n="wizUploadSuccess">تم الرفع بنجاح</div><div class="upload-bar-wrap"><div class="upload-bar"></div></div></div>
+                        </div>
+                        <div class="auth-field"><label data-i18n="wizDegree">صورة المؤهل الجامعي</label><span class="wiz-hint">PDF, JPG, PNG</span>
+                            <div class="upload-zone" data-field="degree_file"><input type="file" accept=".pdf,.jpg,.jpeg,.png"><div class="upload-spinner"></div><svg class="upload-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><svg class="upload-check" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><div class="upload-label" data-i18n="wizUpload">اسحب الملف أو اضغط للرفع</div><div class="upload-name"></div><div class="upload-success" data-i18n="wizUploadSuccess">تم الرفع بنجاح</div><div class="upload-bar-wrap"><div class="upload-bar"></div></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="auth-error" id="profileError"></div>
+
+                <div class="wiz-nav">
+                    <button type="button" class="wiz-prev" id="wizPrev" style="display:none" data-i18n="wizPrev">السابق</button>
+                    <button type="button" class="auth-submit wiz-next" id="wizNext"><span data-i18n="wizNext">التالي</span></button>
+                    <button type="submit" class="auth-submit" id="profileSubmit" style="display:none"><span class="auth-submit-text" data-i18n="profileSave">حفظ والمتابعة</span><div class="auth-spinner" style="display:none"></div></button>
+                </div>
+            </form>
         </div>
-    </header>
+    </div>
 
-    <main>
+    <!-- ═══════════════ HEADER ═══════════════ -->
+    <script src="njd-navbar.js"></script>
+    <njd-navbar id="header" lang="ar" app="landing" logo="logo.png" auth="false"></njd-navbar>
+
+    <main id="portalMain" style="display:none;">
         <!-- ═══════════════ HERO ═══════════════ -->
         <section class="hero">
             <div class="hero-bg"></div>
@@ -1149,137 +1664,9 @@
         <section class="apps-section">
             <div class="apps-grid">
 
-                <!-- ──────── NJD Board Card ──────── -->
-                <article class="app-card">
-                    <div class="status-badge">
-                        <span class="status-dot"></span>
-                        <span data-i18n="statusOnline">متاح — Online</span>
-                    </div>
-
-                    <div class="icon-container">
-                        <!-- 3D Clay Kanban Board Icon -->
-                        <svg class="clay-icon" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <defs>
-                                <linearGradient id="boardBg" x1="100" y1="24" x2="100" y2="178" gradientUnits="userSpaceOnUse">
-                                    <stop offset="0%" stop-color="#818CF8"/>
-                                    <stop offset="100%" stop-color="#4F46E5"/>
-                                </linearGradient>
-                                <radialGradient id="boardShine" cx="0.35" cy="0.15" r="0.65">
-                                    <stop offset="0%" stop-color="white" stop-opacity="0.35"/>
-                                    <stop offset="100%" stop-color="white" stop-opacity="0"/>
-                                </radialGradient>
-                                <linearGradient id="clipBg" x1="100" y1="10" x2="100" y2="38" gradientUnits="userSpaceOnUse">
-                                    <stop offset="0%" stop-color="#E2E8F0"/>
-                                    <stop offset="100%" stop-color="#94A3B8"/>
-                                </linearGradient>
-                                <linearGradient id="cardOrange" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stop-color="#FDBA74"/><stop offset="100%" stop-color="#F97316"/>
-                                </linearGradient>
-                                <linearGradient id="cardGreen" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stop-color="#86EFAC"/><stop offset="100%" stop-color="#22C55E"/>
-                                </linearGradient>
-                                <linearGradient id="cardBlue" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stop-color="#93C5FD"/><stop offset="100%" stop-color="#3B82F6"/>
-                                </linearGradient>
-                                <linearGradient id="cardPink" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stop-color="#F9A8D4"/><stop offset="100%" stop-color="#EC4899"/>
-                                </linearGradient>
-                                <linearGradient id="cardYellow" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#FBBF24"/>
-                                </linearGradient>
-                                <filter id="boardShadow" x="-20%" y="-10%" width="140%" height="140%">
-                                    <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#4338CA" flood-opacity="0.25"/>
-                                </filter>
-                                <filter id="cardShadow">
-                                    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.1"/>
-                                </filter>
-                                <filter id="clipShadow">
-                                    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.12"/>
-                                </filter>
-                            </defs>
-                            <ellipse cx="100" cy="188" rx="58" ry="9" fill="#4338CA" opacity="0.1"/>
-                            <g transform="rotate(-4, 100, 100)" filter="url(#boardShadow)">
-                                <rect x="32" y="28" width="136" height="148" rx="16" fill="url(#boardBg)"/>
-                                <rect x="32" y="28" width="136" height="148" rx="16" fill="none" stroke="white" stroke-opacity="0.15" stroke-width="1.5"/>
-                                <rect x="32" y="28" width="136" height="148" rx="16" fill="url(#boardShine)"/>
-                                <line x1="78" y1="56" x2="78" y2="162" stroke="white" stroke-opacity="0.15" stroke-width="1"/>
-                                <line x1="122" y1="56" x2="122" y2="162" stroke="white" stroke-opacity="0.15" stroke-width="1"/>
-                                <circle cx="55" cy="50" r="3" fill="white" fill-opacity="0.35"/>
-                                <circle cx="100" cy="50" r="3" fill="white" fill-opacity="0.35"/>
-                                <circle cx="145" cy="50" r="3" fill="white" fill-opacity="0.35"/>
-                                <g filter="url(#cardShadow)">
-                                    <rect x="38" y="60" width="34" height="26" rx="6" fill="url(#cardOrange)"/>
-                                    <rect x="38" y="60" width="34" height="26" rx="6" fill="white" fill-opacity="0.15"/>
-                                    <line x1="43" y1="68" x2="60" y2="68" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
-                                    <line x1="43" y1="74" x2="54" y2="74" stroke="white" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/>
-                                </g>
-                                <g filter="url(#cardShadow)">
-                                    <rect x="38" y="92" width="34" height="30" rx="6" fill="url(#cardYellow)"/>
-                                    <rect x="38" y="92" width="34" height="30" rx="6" fill="white" fill-opacity="0.15"/>
-                                    <line x1="43" y1="101" x2="62" y2="101" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
-                                    <line x1="43" y1="107" x2="55" y2="107" stroke="white" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/>
-                                    <line x1="43" y1="113" x2="50" y2="113" stroke="white" stroke-opacity="0.25" stroke-width="1.5" stroke-linecap="round"/>
-                                </g>
-                                <g filter="url(#cardShadow)">
-                                    <rect x="38" y="128" width="34" height="22" rx="6" fill="url(#cardGreen)"/>
-                                    <rect x="38" y="128" width="34" height="22" rx="6" fill="white" fill-opacity="0.15"/>
-                                    <path d="M49 139 L53 143 L63 133" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                                </g>
-                                <g filter="url(#cardShadow)">
-                                    <rect x="83" y="60" width="34" height="40" rx="6" fill="url(#cardBlue)"/>
-                                    <rect x="83" y="60" width="34" height="40" rx="6" fill="white" fill-opacity="0.15"/>
-                                    <line x1="88" y1="69" x2="106" y2="69" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
-                                    <line x1="88" y1="76" x2="101" y2="76" stroke="white" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/>
-                                    <line x1="88" y1="83" x2="96" y2="83" stroke="white" stroke-opacity="0.25" stroke-width="1.5" stroke-linecap="round"/>
-                                    <line x1="88" y1="90" x2="103" y2="90" stroke="white" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/>
-                                </g>
-                                <g filter="url(#cardShadow)">
-                                    <rect x="83" y="106" width="34" height="26" rx="6" fill="url(#cardPink)"/>
-                                    <rect x="83" y="106" width="34" height="26" rx="6" fill="white" fill-opacity="0.15"/>
-                                    <line x1="88" y1="115" x2="107" y2="115" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
-                                    <line x1="88" y1="122" x2="99" y2="122" stroke="white" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/>
-                                </g>
-                                <g filter="url(#cardShadow)">
-                                    <rect x="128" y="60" width="34" height="26" rx="6" fill="url(#cardGreen)"/>
-                                    <rect x="128" y="60" width="34" height="26" rx="6" fill="white" fill-opacity="0.15"/>
-                                    <path d="M139 73 L143 77 L153 67" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                                </g>
-                                <g filter="url(#cardShadow)">
-                                    <rect x="128" y="92" width="34" height="22" rx="6" fill="url(#cardOrange)"/>
-                                    <rect x="128" y="92" width="34" height="22" rx="6" fill="white" fill-opacity="0.15"/>
-                                    <line x1="133" y1="100" x2="150" y2="100" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
-                                    <line x1="133" y1="106" x2="144" y2="106" stroke="white" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/>
-                                </g>
-                                <g filter="url(#cardShadow)">
-                                    <rect x="128" y="120" width="34" height="30" rx="6" fill="url(#cardBlue)"/>
-                                    <rect x="128" y="120" width="34" height="30" rx="6" fill="white" fill-opacity="0.15"/>
-                                    <line x1="133" y1="129" x2="152" y2="129" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
-                                    <line x1="133" y1="136" x2="146" y2="136" stroke="white" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round"/>
-                                    <line x1="133" y1="142" x2="140" y2="142" stroke="white" stroke-opacity="0.25" stroke-width="1.5" stroke-linecap="round"/>
-                                </g>
-                            </g>
-                            <g filter="url(#clipShadow)">
-                                <rect x="72" y="12" width="56" height="26" rx="8" fill="url(#clipBg)"/>
-                                <rect x="72" y="12" width="56" height="26" rx="8" fill="none" stroke="white" stroke-opacity="0.3" stroke-width="1"/>
-                                <rect x="84" y="19" width="32" height="12" rx="4" fill="#64748B"/>
-                                <rect x="84" y="19" width="32" height="6" rx="4" fill="white" fill-opacity="0.15"/>
-                            </g>
-                        </svg>
-                    </div>
-
-                    <h2 class="app-name-primary" data-i18n="boardPrimary">NJD Board</h2>
-                    <p class="app-name-secondary" data-i18n="boardSecondary">إدارة المشاريع</p>
-                    <p class="app-desc" data-i18n="boardDesc">أداة إدارة المشاريع الداخلية — تتبع المهام والتقدم ونظّم عمل الفريق بكفاءة.</p>
-                    <a href="https://board.njd-services.net" target="_blank" rel="noopener noreferrer" class="launch-btn">
-                        <span data-i18n="launchBtn">الدخول</span>
-                        <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>
-                        </svg>
-                    </a>
-                </article>
 
                 <!-- ──────── NJD HR Card ──────── -->
-                <article class="app-card">
+                <article class="app-card" id="hrCard">
                     <div class="status-badge">
                         <span class="status-dot"></span>
                         <span data-i18n="statusOnline">متاح — Online</span>
@@ -1375,7 +1762,7 @@
                     <h2 class="app-name-primary" data-i18n="hrPrimary">NJD HR</h2>
                     <p class="app-name-secondary" data-i18n="hrSecondary">الموارد البشرية</p>
                     <p class="app-desc" data-i18n="hrDesc">بوابة الموارد البشرية — إدارة الحضور والإجازات وشؤون الموظفين في مكان واحد.</p>
-                    <a href="https://njd-hr.vercel.app" target="_blank" rel="noopener noreferrer" class="launch-btn">
+                    <a href="https://hr.njd-services.net" target="_blank" rel="noopener noreferrer" class="launch-btn" id="hrLaunchBtn" onclick="return window.__launchWithSession(this, event)">
                         <span data-i18n="launchBtn">الدخول</span>
                         <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>
@@ -1395,11 +1782,178 @@
                 </article>
 
             </div>
+
+            <!-- Admin Dashboard Button (super_admin only) -->
+            <div id="adminBtnWrap" style="display:none; text-align:center; margin-top:32px;">
+                <button class="admin-portal-btn" id="adminBtn">
+                    <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span data-i18n="adminBtn">لوحة التحكم</span>
+                </button>
+            </div>
+
+            <div id="noAccessMsg" style="display: none; text-align: center; padding: 60px 20px;">
+                <p data-i18n="noAccessMsg" style="font-size: 16px; color: var(--gray-500); font-weight: 500; line-height: 1.8;">
+                    لم يتم تفعيل صلاحياتك بعد. تواصل مع المسؤول.
+                </p>
+            </div>
         </section>
     </main>
 
+    <!-- ═══════════════ PROFILE PAGE ═══════════════ -->
+    <section class="profile-section" id="profileSection" style="display:none;">
+        <div class="profile-container">
+            <div class="profile-header">
+                <h1 id="profilePageTitle">الملف الشخصي</h1>
+                <button class="profile-back" id="profileBackBtn">العودة للبوابة</button>
+            </div>
+
+            <!-- Personal Info -->
+            <div class="profile-card">
+                <h2 class="profile-card-title"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span id="profileCardPersonal">المعلومات الشخصية</span></h2>
+                <div class="profile-grid">
+                    <div class="profile-field full-width"><span class="profile-label" id="prLblName">الاسم الرباعي</span><input class="profile-input" id="prName" type="text"></div>
+                    <div class="profile-field"><span class="profile-label" id="prLblPhone">رقم الجوال</span><div class="pr-phone-wrap"><select class="profile-input pr-cc" id="prPhoneCC" dir="ltr"></select><input class="profile-input pr-num" id="prPhone" type="tel" dir="ltr"></div></div>
+                    <div class="profile-field"><span class="profile-label" id="prLblEmergency">رقم الطوارئ</span><div class="pr-phone-wrap"><select class="profile-input pr-cc" id="prEmergencyCC" dir="ltr"></select><input class="profile-input pr-num" id="prEmergency" type="tel" dir="ltr"></div></div>
+                    <div class="profile-field"><span class="profile-label" id="prLblDob">تاريخ الميلاد</span><input class="profile-input" id="prDob" type="date"></div>
+                    <div class="profile-field"><span class="profile-label" id="prLblMarital">الحالة الاجتماعية</span><select class="profile-input" id="prMarital"></select></div>
+                    <div class="profile-field"><span class="profile-label" id="prLblNationality">الجنسية</span><input class="profile-input" id="prNationality" type="text"></div>
+                    <div class="profile-field"><span class="profile-label" id="prLblGender">الجنس</span><select class="profile-input" id="prGender"></select></div>
+                </div>
+            </div>
+
+            <!-- Job Info -->
+            <div class="profile-card">
+                <h2 class="profile-card-title"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg><span id="profileCardJob">المعلومات الوظيفية</span></h2>
+                <div class="profile-grid">
+                    <div class="profile-field"><span class="profile-label" id="prLblJob">المسمى الوظيفي</span><input class="profile-input" id="prJob" type="text"></div>
+                    <div class="profile-field"><span class="profile-label" id="prLblDept">القسم</span><select class="profile-input" id="prDept"><option value="">—</option></select></div>
+                    <div class="profile-field"><span class="profile-label" id="prLblStartDate">تاريخ بداية العمل</span><input class="profile-input" id="prStartDate" type="date"></div>
+                    <div class="profile-field"><span class="profile-label" id="prLblMajor">التخصص الجامعي</span><input class="profile-input" id="prMajor" type="text"></div>
+                </div>
+            </div>
+
+            <!-- Documents -->
+            <div class="profile-card">
+                <h2 class="profile-card-title"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span id="profileCardDocs">المستندات</span></h2>
+                <div id="profileDocsGrid" style="display:flex;flex-direction:column;gap:10px;"></div>
+            </div>
+
+            <div class="profile-save-wrap" id="profileSaveWrap" style="display:none;">
+                <div class="wiz-translating" id="profileTranslating" style="display:none;"><div class="auth-spinner"></div><span id="profileTranslatingText">جاري الترجمة...</span></div>
+                <button class="profile-save-btn" id="profileSaveBtn">حفظ التغييرات</button>
+            </div>
+            <p class="profile-hint" id="profileHint">لتعديل البيانات الأخرى، تواصل مع المسؤول.</p>
+        </div>
+    </section>
+
     <!-- ═══════════════ FOOTER ═══════════════ -->
-    <footer class="footer">
+    <!-- ═══════════════ ADMIN DASHBOARD ═══════════════ -->
+    <section class="admin-section" id="adminSection" style="display:none;">
+        <div class="admin-container">
+            <div class="admin-header">
+                <h1 data-i18n="adminTitle">لوحة التحكم</h1>
+                <button class="admin-back" id="adminBackBtn" data-i18n="adminBack">العودة للبوابة</button>
+            </div>
+
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-atab="overview" data-i18n="adminTabOverview">نظرة عامة</button>
+                <button class="admin-tab" data-atab="users" data-i18n="adminTabUsers">المستخدمين</button>
+                <button class="admin-tab" data-atab="emails" data-i18n="adminTabEmails">الإيميلات المصرح بها</button>
+                <button class="admin-tab" data-atab="notifs" data-i18n="adminTabNotifs">الإشعارات</button>
+                <button class="admin-tab" data-atab="depts" data-i18n="adminTabDepts">الأقسام</button>
+            </div>
+
+            <!-- Overview -->
+            <div class="admin-panel active" data-apanel="overview">
+                <div class="admin-stats" id="adminStats"></div>
+                <div class="admin-recent" id="adminRecent"></div>
+            </div>
+
+            <!-- Users -->
+            <div class="admin-panel" data-apanel="users">
+                <input type="text" class="admin-search" id="adminSearch" placeholder="بحث بالاسم أو البريد..." data-i18n-placeholder="adminSearchPh">
+                <div class="admin-table-wrap">
+                    <table class="admin-table">
+                        <thead><tr>
+                            <th data-i18n="adminThName">الاسم</th>
+                            <th data-i18n="adminThEmail">البريد</th>
+                            <th data-i18n="adminThRole">الدور</th>
+                            <th>HR</th>
+                            <th data-i18n="adminThLocation">الموقع</th>
+                            <th data-i18n="adminThProfile">بروفايل</th>
+                            <th data-i18n="adminThActions">إجراءات</th>
+                        </tr></thead>
+                        <tbody id="adminUsersBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Allowed Emails -->
+            <div class="admin-panel" data-apanel="emails">
+                <div class="admin-form-row">
+                    <input type="email" id="adminNewEmail" placeholder="user@example.com">
+                    <button class="admin-add-btn" id="adminAddEmailBtn" data-i18n="adminAddEmail">إضافة إيميل</button>
+                </div>
+                <div id="adminEmailsList"></div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="admin-panel" data-apanel="notifs">
+                <div class="admin-notif-form" id="adminNotifForm">
+                    <label data-i18n="adminNotifTo">المستلم</label>
+                    <select id="adminNotifTarget"><option value="all" data-i18n="adminNotifAll">الكل</option></select>
+                    <label data-i18n="adminNotifApp">التطبيق</label>
+                    <select id="adminNotifApp"><option value="hr">HR</option></select>
+                    <label>العنوان بالعربي</label><input type="text" id="adminNotifTitleAr" required>
+                    <label>العنوان بالإنجليزي</label><input type="text" id="adminNotifTitleEn" required>
+                    <label>المحتوى بالعربي</label><textarea id="adminNotifBodyAr"></textarea>
+                    <label>المحتوى بالإنجليزي</label><textarea id="adminNotifBodyEn"></textarea>
+                    <label data-i18n="adminNotifLink">الرابط (اختياري)</label><input type="url" id="adminNotifLink" placeholder="https://...">
+                    <div style="margin-top:16px;"><button class="admin-add-btn" id="adminSendNotifBtn" data-i18n="adminSendNotif">إرسال الإشعار</button></div>
+                </div>
+                <h3 style="margin-top:24px;font-size:15px;font-weight:700;color:var(--gray-700);" data-i18n="adminRecentNotifs">آخر الإشعارات المرسلة</h3>
+                <div id="adminNotifsList"></div>
+            </div>
+
+            <!-- Departments -->
+            <div class="admin-panel" data-apanel="depts">
+                <div class="admin-form-row" id="adminDeptForm">
+                    <input type="text" id="adminDeptNameAr" data-i18n-ph="adminDeptArPh" placeholder="اسم القسم بالعربي">
+                    <input type="text" id="adminDeptNameEn" placeholder="Department name in English">
+                    <button class="admin-add-btn" id="adminAddDeptBtn" data-i18n="adminAddDept">إضافة قسم</button>
+                </div>
+                <div id="adminDeptEditWrap" style="display:none;" class="admin-form-row">
+                    <input type="text" id="adminDeptEditAr" data-i18n-ph="adminDeptArPh" placeholder="اسم القسم بالعربي">
+                    <input type="text" id="adminDeptEditEn" placeholder="Department name in English">
+                    <button class="admin-add-btn" id="adminSaveDeptBtn" data-i18n="adminSaveDept">حفظ</button>
+                    <button class="wiz-prev" id="adminCancelDeptBtn" data-i18n="adminCancel" style="padding:10px 16px;">إلغاء</button>
+                </div>
+                <div class="admin-table-wrap" style="margin-top:16px;">
+                    <table class="admin-table">
+                        <thead><tr>
+                            <th data-i18n="adminDeptNameAr">الاسم بالعربي</th>
+                            <th data-i18n="adminDeptNameEn">Name in English</th>
+                            <th data-i18n="adminThActions">إجراءات</th>
+                        </tr></thead>
+                        <tbody id="adminDeptsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Confirm Modal -->
+    <div class="admin-modal" id="adminModal" style="display:none;">
+        <div class="admin-modal-card">
+            <p id="adminModalMsg"></p>
+            <div style="display:flex;gap:12px;">
+                <button class="wiz-prev" id="adminModalCancel" style="flex:1;" data-i18n="adminCancel">إلغاء</button>
+                <button class="auth-submit" id="adminModalConfirm" style="flex:1;" data-i18n="adminConfirm">تأكيد</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer" id="portalFooter" style="display:none;">
         <p class="footer-text" data-i18n="footer" data-i18n-html>&copy; 2026 <strong>NJD Games</strong>. جميع الحقوق محفوظة.</p>
     </footer>
 
@@ -1417,7 +1971,7 @@
                 statusOnline: 'متاح — Online',
                 boardPrimary: 'NJD Board',
                 boardSecondary: 'إدارة المشاريع',
-                boardDesc: 'أداة إدارة المشاريع الداخلية — تتبع المهام والتقدم ونظّم عمل الفريق بكفاءة.',
+                boardDesc: 'أداة إدارة المشاريع الداخلية — تتبع المهام والتقدم وتنظيم عمل الفريق بكفاءة.',
                 hrPrimary: 'NJD HR',
                 hrSecondary: 'الموارد البشرية',
                 hrDesc: 'بوابة الموارد البشرية — إدارة الحضور والإجازات وشؤون الموظفين في مكان واحد.',
@@ -1433,7 +1987,69 @@
                 authEmailLabel: 'البريد الإلكتروني',
                 authPasswordLabel: 'كلمة المرور',
                 authConfirmLabel: 'تأكيد كلمة المرور',
-                logoutBtn: 'خروج'
+                logoutBtn: 'خروج',
+                noAccessMsg: 'لم يتم تفعيل صلاحياتك بعد. تواصل مع المسؤول.',
+                profileTitle: 'أكمل بياناتك',
+                profileNameAr: 'الاسم بالعربي',
+                profileNameEn: 'Name in English',
+                profileSave: 'حفظ والمتابعة',
+                wizStep1: 'الاسم', wizStep2: 'البيانات الشخصية', wizStep3: 'البيانات الوظيفية', wizStep4: 'المستندات',
+                wizFullNameAr: 'الاسم الرباعي', wizFullNameArPh: 'مثال: وليد بن عايض القحطاني',
+                wizFullNameEn: 'الاسم الرباعي', wizShortNameAr: 'الاسم المختصر', wizShortNameArPh: 'مثال: وليد',
+                wizShortNameEn: 'الاسم المختصر', wizNationalId: 'رقم الهوية/الإقامة', wizPassport: 'رقم الجواز',
+                wizDob: 'تاريخ الميلاد', wizNationality: 'الجنسية', wizNationalityPh: 'مثال: سعودي',
+                wizMarital: 'الحالة الاجتماعية', wizChoose: 'اختر', wizSingle: 'أعزب/عزباء', wizMarried: 'متزوج/ة',
+                wizGender: 'الجنس', wizMale: 'ذكر', wizFemale: 'أنثى',
+                wizPhone: 'رقم الجوال', wizEmergPhone: 'رقم جوال الطوارئ',
+                wizJobAr: 'المسمى الوظيفي', wizJobArPh: 'مثال: مطور تطبيقات', wizJobEn: 'Job Title',
+                wizMajorAr: 'التخصص الجامعي', wizMajorArPh: 'مثال: علوم حاسب', wizMajorEn: 'University Major',
+                wizDept: 'القسم/الإدارة', wizStartDate: 'تاريخ بداية العمل',
+                wizSalary: 'الراتب الأساسي', wizAllowances: 'العلاوات الإضافية', wizSAR: 'ريال',
+                wizIqama: 'صورة الهوية/الإقامة', wizPassportFile: 'صورة الجواز', wizCV: 'السيرة الذاتية CV', wizDegree: 'صورة المؤهل الجامعي',
+                wizUpload: 'اسحب الملف أو اضغط للرفع', wizUploading: 'جاري الرفع...', wizUploadSuccess: 'تم الرفع بنجاح', wizPrev: 'السابق', wizNext: 'التالي',
+                wizNoDepts: 'لم يتم إضافة أقسام بعد. تواصل مع المسؤول.',
+                wizName4: 'الاسم يجب أن يتكون من 4 أسماء',
+                wizAutoHint: 'اختياري — سيتم الترجمة تلقائياً',
+                wizTranslating: 'جاري الترجمة...',
+                wizFillAll: 'يرجى تعبئة جميع الحقول المطلوبة', wizUploadAll: 'يرجى رفع جميع المستندات المطلوبة',
+                wizFileTooLarge: 'حجم الملف يجب أن لا يتجاوز 5 ميجابايت', wizUploadFailed: 'فشل رفع الملف. حاول مرة أخرى.',
+                adminBtn: 'لوحة التحكم',
+                adminTitle: 'لوحة التحكم',
+                adminBack: 'العودة للبوابة',
+                adminTabOverview: 'نظرة عامة',
+                adminTabUsers: 'المستخدمين',
+                adminTabEmails: 'الإيميلات المصرح بها',
+                adminTabNotifs: 'الإشعارات',
+                adminTabDepts: 'الأقسام',
+                adminAddDept: 'إضافة قسم',
+                adminSaveDept: 'حفظ',
+                adminDeptNameAr: 'الاسم بالعربي',
+                adminDeptNameEn: 'Name in English',
+                adminDeptArPh: 'اسم القسم بالعربي',
+                adminThName: 'الاسم',
+                adminThEmail: 'البريد',
+                adminThRole: 'الدور',
+                adminThLocation: 'الموقع',
+                adminThProfile: 'بروفايل',
+                adminThActions: 'إجراءات',
+                adminSearchPh: 'بحث بالاسم أو البريد...',
+                adminAddEmail: 'إضافة إيميل',
+                adminCancel: 'إلغاء',
+                adminConfirm: 'تأكيد',
+                adminDeleteConfirm: 'هل أنت متأكد من حذف هذا المستخدم؟ سيتم حذف جميع بياناته.',
+                adminStatTotal: 'إجمالي المستخدمين',
+                adminStatActive: 'بروفايل مكتمل',
+                adminStatPending: 'بدون بروفايل',
+                adminStatNotifs: 'الإشعارات المرسلة',
+                adminNotifTo: 'المستلم',
+                adminNotifAll: 'الكل',
+                adminNotifApp: 'التطبيق',
+                adminNotifLink: 'الرابط (اختياري)',
+                adminSendNotif: 'إرسال الإشعار',
+                adminRecentNotifs: 'آخر الإشعارات المرسلة',
+                adminRecentSignups: 'آخر التسجيلات',
+                adminSuccess: 'تمت العملية بنجاح',
+                adminError: 'حدث خطأ. حاول مرة أخرى.'
             },
             en: {
                 headerBadge: 'Internal Portal',
@@ -1458,7 +2074,69 @@
                 authEmailLabel: 'Email',
                 authPasswordLabel: 'Password',
                 authConfirmLabel: 'Confirm Password',
-                logoutBtn: 'Logout'
+                logoutBtn: 'Logout',
+                noAccessMsg: 'Your access has not been activated yet. Contact the administrator.',
+                profileTitle: 'Complete Your Profile',
+                profileNameAr: 'Name in Arabic',
+                profileNameEn: 'Name in English',
+                profileSave: 'Save & Continue',
+                wizStep1: 'Name', wizStep2: 'Personal Info', wizStep3: 'Job Info', wizStep4: 'Documents',
+                wizFullNameAr: 'Full Name', wizFullNameArPh: 'e.g. وليد بن عايض القحطاني',
+                wizFullNameEn: 'Full Name', wizShortNameAr: 'Short Name', wizShortNameArPh: 'e.g. وليد',
+                wizShortNameEn: 'Short Name', wizNationalId: 'National/Iqama ID', wizPassport: 'Passport Number',
+                wizDob: 'Date of Birth', wizNationality: 'Nationality', wizNationalityPh: 'e.g. Saudi',
+                wizMarital: 'Marital Status', wizChoose: 'Choose', wizSingle: 'Single', wizMarried: 'Married',
+                wizGender: 'Gender', wizMale: 'Male', wizFemale: 'Female',
+                wizPhone: 'Phone Number', wizEmergPhone: 'Emergency Phone',
+                wizJobAr: 'Job Title', wizJobArPh: 'e.g. مطور تطبيقات', wizJobEn: 'Job Title',
+                wizMajorAr: 'University Major', wizMajorArPh: 'e.g. علوم حاسب', wizMajorEn: 'University Major',
+                wizDept: 'Department', wizStartDate: 'Start Date',
+                wizSalary: 'Base Salary', wizAllowances: 'Allowances', wizSAR: 'SAR',
+                wizIqama: 'Iqama/ID Copy', wizPassportFile: 'Passport Copy', wizCV: 'CV / Resume', wizDegree: 'Degree Certificate',
+                wizUpload: 'Drag file or click to upload', wizUploading: 'Uploading...', wizUploadSuccess: 'Uploaded successfully', wizPrev: 'Previous', wizNext: 'Next',
+                wizNoDepts: 'No departments added yet. Contact administrator.',
+                wizName4: 'Name must consist of 4 names',
+                wizAutoHint: 'Optional — will be auto-translated',
+                wizTranslating: 'Translating...',
+                wizFillAll: 'Please fill all required fields', wizUploadAll: 'Please upload all required documents',
+                wizFileTooLarge: 'File size must not exceed 5MB', wizUploadFailed: 'File upload failed. Try again.',
+                adminBtn: 'Admin Panel',
+                adminTitle: 'Admin Panel',
+                adminBack: 'Back to Portal',
+                adminTabOverview: 'Overview',
+                adminTabUsers: 'Users',
+                adminTabEmails: 'Allowed Emails',
+                adminTabNotifs: 'Notifications',
+                adminTabDepts: 'Departments',
+                adminAddDept: 'Add Department',
+                adminSaveDept: 'Save',
+                adminDeptNameAr: 'Name in Arabic',
+                adminDeptNameEn: 'Name in English',
+                adminDeptArPh: 'Department name in Arabic',
+                adminThName: 'Name',
+                adminThEmail: 'Email',
+                adminThRole: 'Role',
+                adminThLocation: 'Location',
+                adminThProfile: 'Profile',
+                adminThActions: 'Actions',
+                adminSearchPh: 'Search by name or email...',
+                adminAddEmail: 'Add Email',
+                adminCancel: 'Cancel',
+                adminConfirm: 'Confirm',
+                adminDeleteConfirm: 'Are you sure you want to delete this user? All their data will be removed.',
+                adminStatTotal: 'Total Users',
+                adminStatActive: 'Profile Complete',
+                adminStatPending: 'No Profile',
+                adminStatNotifs: 'Notifications Sent',
+                adminNotifTo: 'Recipient',
+                adminNotifAll: 'Everyone',
+                adminNotifApp: 'App',
+                adminNotifLink: 'Link (optional)',
+                adminSendNotif: 'Send Notification',
+                adminRecentNotifs: 'Recent Notifications',
+                adminRecentSignups: 'Recent Signups',
+                adminSuccess: 'Operation completed successfully',
+                adminError: 'An error occurred. Try again.'
             }
         };
 
@@ -1483,21 +2161,17 @@
                     }
                 }
             });
+            // Update placeholders
+            document.querySelectorAll('[data-i18n-ph]').forEach(function(el) {
+                var key = el.getAttribute('data-i18n-ph');
+                if (t[key] !== undefined) el.placeholder = t[key];
+            });
 
             // Update greeting
             updateGreeting();
 
-            // Update language toggle buttons
-            document.querySelectorAll('.lang-btn').forEach(function(btn) {
-                var isActive = btn.getAttribute('data-lang') === lang;
-                btn.classList.toggle('active', isActive);
-                btn.setAttribute('aria-checked', isActive);
-            });
-
             // Update page title
-            document.title = lang === 'ar'
-                ? 'NJD Games — خدمات نجد'
-                : 'NJD Games — NJD Services';
+            document.title = 'NJD Games Services';
 
             localStorage.setItem('njd-lang', lang);
         }
@@ -1527,33 +2201,55 @@
             }
         }
 
-        /* ─── Header scroll ─── */
-        var header = document.getElementById('header');
-        var ticking = false;
-        window.addEventListener('scroll', function() {
-            if (!ticking) {
-                requestAnimationFrame(function() {
-                    header.classList.toggle('scrolled', window.scrollY > 10);
-                    ticking = false;
-                });
-                ticking = true;
+        /* ─── Navbar Web Component Events ─── */
+        var navbar = document.getElementById('header');
+
+        navbar.addEventListener('njd-lang-change', function(e) {
+            applyLanguage(e.detail.lang);
+            // Update navbar user name for language switch
+            if (window.__njdProfile) {
+                var n = document.getElementById('header');
+                if (n) n.setAttribute('user-name', e.detail.lang === 'ar' ? window.__njdProfile.name_ar : window.__njdProfile.name_en);
             }
         });
 
-        /* ─── Event Listeners ─── */
-        // Language toggle
-        document.querySelectorAll('.lang-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                var lang = this.getAttribute('data-lang');
-                if (lang !== currentLang) {
-                    applyLanguage(lang);
-                }
-            });
+        /* ─── Notification Bell Dropdown ─── */
+        var notifDrop = document.getElementById('notifDropdown');
+        var notifTexts = {
+            ar: 'الإشعارات متاحة داخل التطبيقات',
+            en: 'Notifications are available inside apps'
+        };
+
+        function closeNotif() { notifDrop.classList.remove('open'); }
+
+        navbar.addEventListener('njd-notification-click', function() {
+            if (notifDrop.classList.contains('open')) { closeNotif(); return; }
+            notifDrop.textContent = notifTexts[currentLang] || notifTexts.ar;
+            // Position below the bell icon
+            var bell = navbar.shadowRoot && navbar.shadowRoot.querySelector('.bell');
+            if (bell) {
+                var r = bell.getBoundingClientRect();
+                notifDrop.style.top = (r.bottom + 8) + 'px';
+                notifDrop.style.left = Math.max(8, r.left + r.width / 2 - 125) + 'px';
+            }
+            notifDrop.classList.add('open');
         });
 
-        // Theme toggle
-        document.getElementById('themeToggle').addEventListener('click', function() {
-            applyTheme(currentTheme === 'light' ? 'dark' : 'light');
+        document.addEventListener('click', function(e) {
+            if (!notifDrop.classList.contains('open')) return;
+            if (notifDrop.contains(e.target)) return;
+            // Check if click was on the bell inside shadow DOM
+            var path = e.composedPath && e.composedPath();
+            if (path) {
+                for (var i = 0; i < path.length; i++) {
+                    if (path[i].classList && path[i].classList.contains('bell')) return;
+                }
+            }
+            closeNotif();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeNotif();
         });
 
         /* ─── Initialize ─── */
@@ -1571,39 +2267,45 @@
         'use strict';
 
         /* ─── Supabase Config ─── */
-        var SUPABASE_URL = 'https://iauulqfgrbegwcnfatmx.supabase.co';
-        var SUPABASE_KEY = 'sb_publishable_Dvk_dI_FY6oxhyOw7__06Q_wzDmwguJ';
+        var SUPABASE_URL = 'https://db.njd-services.net';
+        var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzg0ODE5MTU5LCJleHAiOjIxMDAxNzkxNTl9.mu1SsmoiUv2eZcH3-Qfck7OSl_Ni9umbdMTVY1fvRUM';
 
-        /* ─── Cookie Storage for Cross-Subdomain Sessions ─── */
+        /* ─── Cross-Subdomain Cookie (refresh token only, ~40 bytes) ─── */
         var isNjdDomain = location.hostname === 'njd-services.net' || location.hostname.endsWith('.njd-services.net');
         var cookieDomain = isNjdDomain ? '; domain=.njd-services.net' : '';
         var cookieSecure = location.protocol === 'https:' ? '; Secure' : '';
 
-        var cookieStorage = {
-            getItem: function(key) {
-                var cookies = document.cookie.split('; ');
-                for (var i = 0; i < cookies.length; i++) {
-                    var parts = cookies[i].split('=');
-                    if (decodeURIComponent(parts[0]) === key) {
-                        return decodeURIComponent(parts.slice(1).join('='));
-                    }
+        function setRefreshCookie(token) {
+            document.cookie = 'njd-rt=' + encodeURIComponent(token)
+                + cookieDomain + '; path=/; max-age=31536000; SameSite=Lax' + cookieSecure;
+        }
+
+        function getRefreshCookie() {
+            var match = document.cookie.match(/(^|; )njd-rt=([^;]*)/);
+            return match ? decodeURIComponent(match[2]) : null;
+        }
+
+        function clearRefreshCookie() {
+            document.cookie = 'njd-rt=; path=/' + cookieDomain
+                + '; max-age=0; SameSite=Lax' + cookieSecure;
+        }
+
+        /* ─── Migrate old cookie-based session to localStorage ─── */
+        (function() {
+            var match = document.cookie.match(/(^|; )njd-auth-token=([^;]*)/);
+            if (match) {
+                var val = decodeURIComponent(match[2]);
+                if (val && !localStorage.getItem('njd-auth-token')) {
+                    localStorage.setItem('njd-auth-token', val);
                 }
-                return null;
-            },
-            setItem: function(key, value) {
-                document.cookie = encodeURIComponent(key) + '=' + encodeURIComponent(value)
-                    + cookieDomain + '; path=/; max-age=31536000; SameSite=Lax' + cookieSecure;
-            },
-            removeItem: function(key) {
-                document.cookie = encodeURIComponent(key) + '=; path=/' + cookieDomain
+                document.cookie = 'njd-auth-token=; path=/' + cookieDomain
                     + '; max-age=0; SameSite=Lax' + cookieSecure;
             }
-        };
+        })();
 
-        /* ─── Initialize Supabase Client ─── */
+        /* ─── Initialize Supabase Client (localStorage — no 4KB limit) ─── */
         var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
             auth: {
-                storage: cookieStorage,
                 storageKey: 'njd-auth-token',
                 autoRefreshToken: true,
                 persistSession: true,
@@ -1623,7 +2325,7 @@
         var authSubmit = document.getElementById('authSubmit');
         var authSubmitText = authSubmit.querySelector('.auth-submit-text');
         var authSpinner = authSubmit.querySelector('.auth-spinner');
-        var logoutBtn = document.getElementById('logoutBtn');
+        var navbarEl = document.getElementById('header');
 
         /* ─── Password Toggle ─── */
         document.querySelectorAll('.password-toggle').forEach(function(btn) {
@@ -1649,6 +2351,7 @@
                 loginBtn: 'تسجيل الدخول',
                 registerBtn: 'إنشاء حساب',
                 emailDomainError: 'يُسمح فقط بعناوين البريد @njdstudio.net للتسجيل',
+                emailNotAllowed: 'هذا البريد غير مصرح له بالتسجيل',
                 passwordMismatch: 'كلمتا المرور غير متطابقتين',
                 registerSuccess: 'تم إرسال رابط التأكيد إلى بريدك الإلكتروني. يرجى تفعيل حسابك أولاً.',
                 invalidCredentials: 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
@@ -1662,6 +2365,7 @@
                 loginBtn: 'Sign In',
                 registerBtn: 'Register',
                 emailDomainError: 'Only @njdstudio.net email addresses are allowed to register',
+                emailNotAllowed: 'This email is not authorized to register',
                 passwordMismatch: 'Passwords do not match',
                 registerSuccess: 'A confirmation link has been sent to your email. Please verify your account first.',
                 invalidCredentials: 'Invalid email or password',
@@ -1679,14 +2383,411 @@
         }
 
         /* ─── Show/Hide Portal ─── */
+        var profileOverlay = document.getElementById('profileOverlay');
+
         function showPortal() {
+            authOverlay.style.display = 'none';
             authOverlay.classList.add('hidden');
-            logoutBtn.style.display = 'flex';
+            navbarEl.setAttribute('auth', 'true');
+            // Don't hide loading screen here — let the target view hide it after data is ready
+            loadUserProfile();
+            // Preserve #profile hash if navigating from another subdomain, otherwise default to #portal
+            var h = location.hash;
+            if (h !== '#profile' && h !== '#admin') {
+                try { history.replaceState(null, '', location.pathname + '#portal'); } catch(e) {}
+            }
+        }
+
+        function showPortalContent() {
+            profileOverlay.style.display = 'none';
+            checkAppAccess();
+            checkAdminStatus();
+            handleHashRoute();
+            // Hide loading screen for portal/admin routes (profile route handles its own)
+            if (location.hash !== '#profile') {
+                hideLoadingScreen();
+            }
+        }
+
+        /* ─── Profile Check & Name in Navbar ─── */
+        function loadUserProfile() {
+            sb.auth.getSession().then(function(result) {
+                if (!result.data.session) return;
+                var uid = result.data.session.user.id;
+                sb.from('profiles').select('name_ar, name_en, profile_completed').eq('id', uid).maybeSingle().then(function(r) {
+                    if (r.data && r.data.profile_completed) {
+                        var lang = getLang();
+                        navbarEl.setAttribute('user-name', lang === 'ar' ? r.data.name_ar : r.data.name_en);
+                        window.__njdProfile = r.data;
+                        showPortalContent();
+                    } else {
+                        loadDepartments();
+                        setupWizardLang();
+                        profileOverlay.style.display = 'flex';
+                        hideLoadingScreen();
+                    }
+                });
+            });
+        }
+
+        /* ─── Load Departments for Wizard ─── */
+        function loadDepartments() {
+            var sel = document.getElementById('pDept');
+            var empty = document.getElementById('pDeptEmpty');
+            sb.from('departments').select('name_ar, name_en').order('name_ar').then(function(r) {
+                if (!r.data || r.data.length === 0) {
+                    empty.style.display = '';
+                    sel.disabled = true;
+                    sel.removeAttribute('required');
+                    return;
+                }
+                empty.style.display = 'none';
+                var lang = getLang();
+                r.data.forEach(function(d) {
+                    var o = document.createElement('option');
+                    o.value = lang === 'ar' ? d.name_ar : d.name_en;
+                    o.textContent = lang === 'ar' ? d.name_ar : d.name_en;
+                    sel.appendChild(o);
+                });
+            });
+        }
+
+        /* ─── Onboarding Wizard ─── */
+        var wizStep = 1;
+        var wizUploads = {};
+        var wizDots = document.querySelectorAll('.wiz-dot');
+        var wizLines = document.querySelectorAll('.wiz-line');
+
+        function wizShowStep(n) {
+            wizStep = n;
+            document.querySelectorAll('.wiz-step').forEach(function(s) {
+                s.classList.toggle('active', parseInt(s.dataset.step) === n);
+            });
+            wizDots.forEach(function(d, i) {
+                d.classList.remove('done', 'current');
+                if (i < n - 1) d.classList.add('done');
+                if (i === n - 1) d.classList.add('current');
+            });
+            wizLines.forEach(function(l, i) {
+                l.classList.toggle('done', i < n - 1);
+            });
+            document.getElementById('wizPrev').style.display = n > 1 ? '' : 'none';
+            document.getElementById('wizNext').style.display = n < 4 ? '' : 'none';
+            document.getElementById('profileSubmit').style.display = n === 4 ? '' : 'none';
+            document.getElementById('profileError').textContent = '';
+            // Scroll to top of overlay
+            profileOverlay.scrollTop = 0;
+        }
+
+        function wordCount(s) { return s.trim().split(/\s+/).filter(function(w) { return w.length > 0; }).length; }
+
+        function wizValidateStep(n) {
+            var step = document.querySelector('.wiz-step[data-step="' + n + '"]');
+            var inputs = step.querySelectorAll('input[required], select[required]');
+            // Clear field-level errors
+            step.querySelectorAll('.wiz-field-err').forEach(function(e) { e.style.display = 'none'; });
+
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].type === 'radio') {
+                    var name = inputs[i].name;
+                    if (!step.querySelector('input[name="' + name + '"]:checked')) {
+                        document.getElementById('profileError').textContent = t('wizFillAll') || 'Please fill all required fields';
+                        return false;
+                    }
+                } else if (!inputs[i].value.trim()) {
+                    inputs[i].focus();
+                    document.getElementById('profileError').textContent = t('wizFillAll') || 'Please fill all required fields';
+                    return false;
+                }
+            }
+            // Step 1: validate 4-word full names
+            if (n === 1) {
+                var nameMsg = t('wizName4') || 'Name must consist of 4 names';
+                if (_wizLang === 'en') {
+                    var enVal = document.getElementById('pFullNameEn').value.trim();
+                    var enErr = document.getElementById('pFullNameEnErr');
+                    if (wordCount(enVal) !== 4) {
+                        enErr.textContent = nameMsg;
+                        enErr.style.display = '';
+                        document.getElementById('pFullNameEn').focus();
+                        return false;
+                    }
+                } else {
+                    var arVal = document.getElementById('pFullNameAr').value.trim();
+                    var arErr = document.getElementById('pFullNameArErr');
+                    if (wordCount(arVal) !== 4) {
+                        arErr.textContent = nameMsg;
+                        arErr.style.display = '';
+                        document.getElementById('pFullNameAr').focus();
+                        return false;
+                    }
+                }
+            }
+            // Step 4: only CV is required
+            if (n === 4) {
+                if (!wizUploads.cv_file) {
+                    document.getElementById('profileError').textContent = t('wizUploadAll') || 'Please upload the required CV document';
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        document.getElementById('wizNext').addEventListener('click', function() {
+            if (wizValidateStep(wizStep)) wizShowStep(wizStep + 1);
+        });
+        document.getElementById('wizPrev').addEventListener('click', function() {
+            wizShowStep(wizStep - 1);
+        });
+
+        /* ─── File Uploads ─── */
+        document.querySelectorAll('.upload-zone').forEach(function(zone) {
+            var fileInput = zone.querySelector('input[type="file"]');
+            var barWrap = zone.querySelector('.upload-bar-wrap');
+            var bar = zone.querySelector('.upload-bar');
+            var nameEl = zone.querySelector('.upload-name');
+            var fieldName = zone.dataset.field;
+
+            zone.addEventListener('click', function() { fileInput.click(); });
+
+            zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('dragover'); });
+            zone.addEventListener('dragleave', function() { zone.classList.remove('dragover'); });
+            zone.addEventListener('drop', function(e) {
+                e.preventDefault(); zone.classList.remove('dragover');
+                if (e.dataTransfer.files.length) { fileInput.files = e.dataTransfer.files; handleFile(e.dataTransfer.files[0]); }
+            });
+
+            fileInput.addEventListener('change', function() { if (fileInput.files[0]) handleFile(fileInput.files[0]); });
+
+            function handleFile(file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    document.getElementById('profileError').textContent = t('wizFileTooLarge') || 'File size must not exceed 5MB';
+                    return;
+                }
+                // Show uploading state
+                zone.classList.remove('uploaded');
+                zone.classList.add('uploading');
+                var labelEl = zone.querySelector('.upload-label');
+                var origLabel = labelEl.textContent;
+                labelEl.textContent = t('wizUploading') || 'Uploading...';
+                barWrap.style.display = '';
+                bar.style.width = '30%';
+
+                sb.auth.getSession().then(function(result) {
+                    if (!result.data.session) return;
+                    var uid = result.data.session.user.id;
+                    var ext = file.name.split('.').pop();
+                    var path = uid + '/' + fieldName + '_' + Date.now() + '.' + ext;
+                    bar.style.width = '60%';
+
+                    sb.storage.from('employee-documents').upload(path, file).then(function(r) {
+                        bar.style.width = '100%';
+                        zone.classList.remove('uploading');
+                        if (r.error) {
+                            document.getElementById('profileError').textContent = t('wizUploadFailed') || 'File upload failed. Try again.';
+                            barWrap.style.display = 'none';
+                            bar.style.width = '0';
+                            labelEl.textContent = origLabel;
+                            return;
+                        }
+                        wizUploads[fieldName] = path;
+                        nameEl.textContent = file.name;
+                        zone.classList.add('uploaded');
+                        setTimeout(function() { barWrap.style.display = 'none'; }, 500);
+                    });
+                });
+            }
+        });
+
+        /* ─── Wizard Language Setup ─── */
+        function firstWord(s) { return (s || '').split(/\s+/)[0] || s; }
+        var _wizLang = 'ar';
+
+        function setupWizardLang() {
+            _wizLang = document.documentElement.getAttribute('lang') || 'ar';
+            var isAr = (_wizLang === 'ar');
+            console.log('[NJD] Wizard lang:', _wizLang);
+
+            // Directly show/hide bilingual fields by ID
+            var arIds = ['pFullNameAr', 'pJobAr', 'pMajorAr'];
+            var enIds = ['pFullNameEn', 'pJobEn', 'pMajorEn'];
+
+            arIds.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.closest('.auth-field').style.display = isAr ? '' : 'none';
+            });
+            enIds.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.closest('.auth-field').style.display = isAr ? 'none' : '';
+            });
+
+            // Set required only on visible fields
+            document.getElementById('pFullNameAr').required = isAr;
+            document.getElementById('pFullNameEn').required = !isAr;
+            document.getElementById('pMajorAr').required = isAr;
+            document.getElementById('pMajorEn').required = !isAr;
+            document.getElementById('pJobAr').required = false;
+            document.getElementById('pJobEn').required = false;
+        }
+
+        /* ─── Auto-Translate Profile via Edge Function ─── */
+        function translateProfile(fields) {
+            var toTranslate = {};
+            var direction = _wizLang === 'ar' ? 'ar-to-en' : 'en-to-ar';
+
+            if (_wizLang === 'en') {
+                if (fields.full_name_en) toTranslate.full_name = fields.full_name_en;
+                if (fields.job_title_en) toTranslate.job_title = fields.job_title_en;
+                if (fields.university_major_en) toTranslate.university_major = fields.university_major_en;
+            } else {
+                if (fields.full_name_ar) toTranslate.full_name = fields.full_name_ar;
+                if (fields.job_title_ar) toTranslate.job_title = fields.job_title_ar;
+                if (fields.university_major_ar) toTranslate.university_major = fields.university_major_ar;
+            }
+
+            if (Object.keys(toTranslate).length === 0) return Promise.resolve(fields);
+
+            var errEl = document.getElementById('profileError');
+            errEl.innerHTML = '<div class="wiz-translating"><div class="auth-spinner"></div><span>' + (t('wizTranslating') || 'Translating...') + '</span></div>';
+
+            return sb.functions.invoke('translate-profile', { body: { direction: direction, fields: toTranslate } }).then(function(result) {
+                errEl.innerHTML = '';
+                if (result.error || !result.data) return fields;
+                var tr = result.data;
+                if (_wizLang === 'en') {
+                    fields.full_name_ar = tr.full_name || fields.full_name_en;
+                    fields.job_title_ar = tr.job_title || fields.job_title_en;
+                    fields.university_major_ar = tr.university_major || fields.university_major_en;
+                } else {
+                    fields.full_name_en = tr.full_name || fields.full_name_ar;
+                    fields.job_title_en = tr.job_title || fields.job_title_ar;
+                    fields.university_major_en = tr.university_major || fields.university_major_ar;
+                }
+                return fields;
+            }).catch(function() {
+                errEl.innerHTML = '';
+                return fields;
+            });
+        }
+
+        /* ─── Profile Form Final Submit ─── */
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!wizValidateStep(4)) return;
+
+            var errEl = document.getElementById('profileError');
+            var btn = document.getElementById('profileSubmit');
+            errEl.textContent = '';
+            btn.disabled = true;
+            btn.querySelector('.auth-submit-text').style.display = 'none';
+            btn.querySelector('.auth-spinner').style.display = '';
+
+            var gender = document.querySelector('input[name="gender"]:checked');
+
+            var formFields = {
+                full_name_ar: document.getElementById('pFullNameAr').value.trim(),
+                full_name_en: document.getElementById('pFullNameEn').value.trim(),
+                job_title_ar: document.getElementById('pJobAr').value.trim(),
+                job_title_en: document.getElementById('pJobEn').value.trim(),
+                university_major_ar: document.getElementById('pMajorAr').value.trim(),
+                university_major_en: document.getElementById('pMajorEn').value.trim()
+            };
+
+            translateProfile(formFields).then(function(fields) {
+                var fullAr = fields.full_name_ar || fields.full_name_en;
+                var fullEn = fields.full_name_en || fields.full_name_ar;
+
+                return sb.auth.getSession().then(function(result) {
+                    if (!result.data.session) return;
+                    return sb.from('profiles').upsert({
+                        id: result.data.session.user.id,
+                        name_ar: firstWord(fullAr),
+                        name_en: firstWord(fullEn),
+                        full_name_ar: fullAr,
+                        full_name_en: fullEn,
+                        national_id: document.getElementById('pNationalId').value.trim(),
+                        passport_number: document.getElementById('pPassportNum').value.trim(),
+                        date_of_birth: document.getElementById('pDob').value || null,
+                        marital_status: document.getElementById('pMarital').value || null,
+                        nationality: document.getElementById('pNationality').value.trim(),
+                        gender: gender ? gender.value : null,
+                        phone: document.getElementById('pPhoneCode').value + document.getElementById('pPhone').value.trim(),
+                        emergency_phone: document.getElementById('pEmergPhoneCode').value + document.getElementById('pEmergPhone').value.trim(),
+                        job_title_ar: fields.job_title_ar || fields.job_title_en,
+                        job_title_en: fields.job_title_en || fields.job_title_ar,
+                        university_major_ar: fields.university_major_ar || fields.university_major_en,
+                        university_major_en: fields.university_major_en || fields.university_major_ar,
+                        department: document.getElementById('pDept').value.trim(),
+                        start_date: document.getElementById('pStartDate').value || null,
+                        base_salary: parseFloat(document.getElementById('pSalary').value) || 0,
+                        allowances: parseFloat(document.getElementById('pAllowances').value) || 0,
+                        iban: document.getElementById('pIban').value.trim(),
+                        iqama_file: wizUploads.iqama_file || null,
+                        passport_file: wizUploads.passport_file || null,
+                        cv_file: wizUploads.cv_file || null,
+                        degree_file: wizUploads.degree_file || null,
+                        profile_completed: true,
+                        updated_at: new Date().toISOString()
+                    });
+                });
+            }).then(function(r) {
+                btn.disabled = false;
+                btn.querySelector('.auth-submit-text').style.display = '';
+                btn.querySelector('.auth-spinner').style.display = 'none';
+                if (r && r.error) {
+                    errEl.textContent = t('genericError');
+                    return;
+                }
+                var lang = getLang();
+                var feVal = document.getElementById('pFullNameEn').value.trim();
+                var faVal = document.getElementById('pFullNameAr').value.trim();
+                var savedNameEn = firstWord(feVal || faVal);
+                var savedNameAr = firstWord(faVal || feVal);
+                window.__njdProfile = { name_ar: savedNameAr, name_en: savedNameEn };
+                navbarEl.setAttribute('user-name', lang === 'ar' ? savedNameAr : savedNameEn);
+                showPortalContent();
+            }).catch(function() {
+                btn.disabled = false;
+                btn.querySelector('.auth-submit-text').style.display = '';
+                btn.querySelector('.auth-spinner').style.display = 'none';
+                errEl.textContent = t('genericError');
+            });
+        });
+
+        /* ─── App Access Check (RBAC) ─── */
+        function checkAppAccess() {
+            sb.auth.getSession().then(function(result) {
+                if (!result.data.session) return;
+                var uid = result.data.session.user.id;
+
+                Promise.all([
+                    sb.rpc('has_app_access', { uid: uid, app: 'hr' })
+                ]).then(function(results) {
+                    var hrOk = results[0].error ? true : results[0].data;
+
+                    var hrCard = document.getElementById('hrCard');
+                    var noAccess = document.getElementById('noAccessMsg');
+
+                    if (hrCard) hrCard.style.display = hrOk ? '' : 'none';
+                    if (noAccess) noAccess.style.display = hrOk ? 'none' : '';
+                });
+            });
         }
 
         function showAuth() {
+            authOverlay.style.display = 'flex';
             authOverlay.classList.remove('hidden');
-            logoutBtn.style.display = 'none';
+            profileOverlay.style.display = 'none';
+            navbarEl.setAttribute('auth', 'false');
+            document.getElementById('portalMain').style.display = 'none';
+            document.getElementById('portalFooter').style.display = 'none';
+        }
+
+        function hideLoadingScreen() {
+            var loader = document.querySelector('.njd-loader');
+            if (!loader) return;
+            loader.classList.add('fade-out');
+            loader.addEventListener('transitionend', function() { loader.remove(); });
         }
 
         /* ─── Error Mapping ─── */
@@ -1722,6 +2823,7 @@
                 authError.textContent = '';
                 authInfo.style.display = 'none';
                 authPassword.setAttribute('autocomplete', authMode === 'login' ? 'current-password' : 'new-password');
+                authEmail.setAttribute('autocomplete', 'username');
                 authConfirmField.style.display = authMode === 'register' ? 'block' : '';
                 authConfirm.required = authMode === 'register';
                 if (authMode === 'login') authConfirm.value = '';
@@ -1737,11 +2839,6 @@
             authError.textContent = '';
             authInfo.style.display = 'none';
 
-            if (authMode === 'register' && !email.endsWith('@njdstudio.net')) {
-                authError.textContent = t('emailDomainError');
-                return;
-            }
-
             if (authMode === 'register' && password !== authConfirm.value) {
                 authError.textContent = t('passwordMismatch');
                 return;
@@ -1749,29 +2846,46 @@
 
             setLoading(true);
 
-            var authPromise;
-            if (authMode === 'login') {
-                authPromise = sb.auth.signInWithPassword({ email: email, password: password });
-            } else {
-                authPromise = sb.auth.signUp({ email: email, password: password });
-            }
+            /* Check email eligibility for registration via RPC.
+               Falls back to @njdstudio.net-only if RPC is unavailable. */
+            var emailCheck = (authMode === 'register')
+                ? sb.rpc('is_email_allowed', { check_email: email }).then(function(r) {
+                    if (r.error) return { data: email.endsWith('@njdstudio.net') };
+                    return r;
+                })
+                : Promise.resolve({ data: true });
 
-            authPromise.then(function(result) {
-                setLoading(false);
-                if (result.error) {
-                    authError.textContent = getErrorMessage(result.error);
+            emailCheck.then(function(checkResult) {
+                if (!checkResult.data) {
+                    setLoading(false);
+                    authError.textContent = t('emailNotAllowed');
                     return;
                 }
-                if (authMode === 'register') {
-                    if (result.data.user && !result.data.session) {
-                        authInfo.textContent = t('registerSuccess');
-                        authInfo.style.display = '';
-                    } else if (result.data.session) {
+
+                var authPromise;
+                if (authMode === 'login') {
+                    authPromise = sb.auth.signInWithPassword({ email: email, password: password });
+                } else {
+                    authPromise = sb.auth.signUp({ email: email, password: password });
+                }
+
+                return authPromise.then(function(result) {
+                    setLoading(false);
+                    if (result.error) {
+                        authError.textContent = getErrorMessage(result.error);
+                        return;
+                    }
+                    if (authMode === 'register') {
+                        if (result.data.user && !result.data.session) {
+                            authInfo.textContent = t('registerSuccess');
+                            authInfo.style.display = '';
+                        } else if (result.data.session) {
+                            showPortal();
+                        }
+                    } else {
                         showPortal();
                     }
-                } else {
-                    showPortal();
-                }
+                });
             }).catch(function() {
                 setLoading(false);
                 authError.textContent = t('genericError');
@@ -1779,7 +2893,14 @@
         });
 
         /* ─── Logout ─── */
-        logoutBtn.addEventListener('click', function() {
+        /* ─── Re-run wizard field visibility on language switch ─── */
+        navbarEl.addEventListener('njd-lang-change', function() {
+            if (profileOverlay.style.display === 'flex') {
+                setupWizardLang();
+            }
+        });
+
+        navbarEl.addEventListener('njd-logout', function() {
             sb.auth.signOut().then(function() {
                 showAuth();
             });
@@ -1787,23 +2908,850 @@
 
         /* ─── Auth State Change Listener ─── */
         sb.auth.onAuthStateChange(function(event, session) {
+            if (session) {
+                setRefreshCookie(session.refresh_token);
+            }
             if (event === 'SIGNED_IN' && session) {
                 showPortal();
             } else if (event === 'SIGNED_OUT') {
+                clearRefreshCookie();
                 showAuth();
             }
         });
 
         /* ─── Initial Session Check ─── */
+        var _authResolved = false;
+        function resolveToLogin() {
+            if (_authResolved) return;
+            _authResolved = true;
+            hideLoadingScreen();
+            showAuth();
+        }
+        function resolveToPortal() {
+            if (_authResolved) return;
+            _authResolved = true;
+            showPortal();
+        }
+
+        /* Failsafe: if auth check hasn't resolved in 2s, show login */
+        setTimeout(resolveToLogin, 2000);
+
         sb.auth.getSession().then(function(result) {
             if (result.data.session) {
-                showPortal();
+                resolveToPortal();
+                return;
+            }
+            /* Recover from cross-subdomain refresh token cookie */
+            var rt = getRefreshCookie();
+            if (rt) {
+                sb.auth.refreshSession({ refresh_token: rt }).then(function(r) {
+                    if (r.data.session) {
+                        resolveToPortal();
+                    } else {
+                        clearRefreshCookie();
+                        resolveToLogin();
+                    }
+                }).catch(function() {
+                    clearRefreshCookie();
+                    resolveToLogin();
+                });
+            } else {
+                resolveToLogin();
             }
         }).catch(function() {
-            // Session check failed, keep auth screen visible
+            resolveToLogin();
         });
 
         updateSubmitText();
+
+        /* ─── Launch Apps with Session Tokens ─── */
+        window.__launchWithSession = function(anchor, e) {
+            e.preventDefault();
+            var baseUrl = anchor.href;
+            sb.auth.getSession().then(function(result) {
+                var session = result.data.session;
+                var url = baseUrl;
+                if (session) {
+                    url += '#access_token=' + encodeURIComponent(session.access_token)
+                        + '&refresh_token=' + encodeURIComponent(session.refresh_token);
+                }
+                window.open(url, '_blank', 'noopener,noreferrer');
+            });
+            return false;
+        };
+
+        /* ═══════════════════════════════════════════
+           ADMIN DASHBOARD
+           ═══════════════════════════════════════════ */
+        var __isAdmin = false;
+        var __adminUsers = [];
+
+        function checkAdminStatus() {
+            sb.rpc('is_super_admin').then(function(r) {
+                __isAdmin = !r.error && r.data === true;
+                var w = document.getElementById('adminBtnWrap');
+                if (w) w.style.display = __isAdmin ? '' : 'none';
+                if (__isAdmin) navbarEl.setAttribute('is-admin', 'true');
+                handleHashRoute();
+            });
+        }
+
+        /* ─── Hash Routing ─── */
+        function handleHashRoute() {
+            var admin = document.getElementById('adminSection');
+            var portal = document.getElementById('portalMain');
+            var footer = document.getElementById('portalFooter');
+            var profile = document.getElementById('profileSection');
+            var hash = location.hash;
+            // Hide all views
+            admin.style.display = 'none';
+            portal.style.display = 'none';
+            footer.style.display = 'none';
+            profile.style.display = 'none';
+
+            if (hash === '#admin' && __isAdmin) {
+                admin.style.display = '';
+                loadAdminData();
+            } else if (hash === '#profile') {
+                profile.style.display = '';
+                loadProfilePage();
+            } else {
+                if (navbarEl.getAttribute('auth') === 'true') {
+                    portal.style.display = '';
+                    footer.style.display = '';
+                }
+            }
+        }
+        window.addEventListener('hashchange', handleHashRoute);
+
+        document.getElementById('adminBtn').addEventListener('click', function() {
+            location.hash = '#admin';
+        });
+        document.getElementById('adminBackBtn').addEventListener('click', function() {
+            location.hash = '#portal';
+        });
+        document.getElementById('profileBackBtn').addEventListener('click', function() {
+            location.hash = '#portal';
+        });
+
+        /* ─── Profile Page ─── */
+        var _profileData = null;
+        var _profileDirty = false;
+        var _profileUid = null;
+
+        // Country codes (common first, then alphabetical)
+        var _ccList = [
+            {c:'+966',f:'🇸🇦',n:'Saudi Arabia'},{c:'+971',f:'🇦🇪',n:'UAE'},{c:'+973',f:'🇧🇭',n:'Bahrain'},{c:'+974',f:'🇶🇦',n:'Qatar'},{c:'+968',f:'🇴🇲',n:'Oman'},{c:'+965',f:'🇰🇼',n:'Kuwait'},
+            {c:'+20',f:'🇪🇬',n:'Egypt'},{c:'+962',f:'🇯🇴',n:'Jordan'},{c:'+961',f:'🇱🇧',n:'Lebanon'},{c:'+964',f:'🇮🇶',n:'Iraq'},{c:'+967',f:'🇾🇪',n:'Yemen'},{c:'+963',f:'🇸🇾',n:'Syria'},
+            {c:'+970',f:'🇵🇸',n:'Palestine'},{c:'+212',f:'🇲🇦',n:'Morocco'},{c:'+216',f:'🇹🇳',n:'Tunisia'},{c:'+213',f:'🇩🇿',n:'Algeria'},{c:'+218',f:'🇱🇾',n:'Libya'},{c:'+249',f:'🇸🇩',n:'Sudan'},
+            {c:'+1',f:'🇺🇸',n:'USA'},{c:'+44',f:'🇬🇧',n:'UK'},{c:'+91',f:'🇮🇳',n:'India'},{c:'+92',f:'🇵🇰',n:'Pakistan'},{c:'+880',f:'🇧🇩',n:'Bangladesh'},{c:'+63',f:'🇵🇭',n:'Philippines'},
+            {c:'+62',f:'🇮🇩',n:'Indonesia'},{c:'+90',f:'🇹🇷',n:'Turkey'},{c:'+33',f:'🇫🇷',n:'France'},{c:'+49',f:'🇩🇪',n:'Germany'},{c:'+86',f:'🇨🇳',n:'China'},{c:'+81',f:'🇯🇵',n:'Japan'},
+            {c:'+82',f:'🇰🇷',n:'South Korea'},{c:'+55',f:'🇧🇷',n:'Brazil'},{c:'+234',f:'🇳🇬',n:'Nigeria'},{c:'+27',f:'🇿🇦',n:'South Africa'},{c:'+254',f:'🇰🇪',n:'Kenya'},{c:'+60',f:'🇲🇾',n:'Malaysia'}
+        ];
+
+        function populateCCSelect(selId) {
+            var sel = document.getElementById(selId);
+            sel.innerHTML = '';
+            _ccList.forEach(function(cc) {
+                var o = document.createElement('option');
+                o.value = cc.c;
+                o.textContent = cc.f + ' ' + cc.c;
+                sel.appendChild(o);
+            });
+            sel.value = '+966';
+        }
+
+        function populateMaritalGender(lang) {
+            var ar = lang === 'ar';
+            var marital = document.getElementById('prMarital');
+            var curM = marital.value;
+            marital.innerHTML = '<option value="single">' + (ar ? 'أعزب' : 'Single') + '</option><option value="married">' + (ar ? 'متزوج' : 'Married') + '</option>';
+            if (curM) marital.value = curM;
+
+            var gender = document.getElementById('prGender');
+            var curG = gender.value;
+            gender.innerHTML = '<option value="male">' + (ar ? 'ذكر' : 'Male') + '</option><option value="female">' + (ar ? 'أنثى' : 'Female') + '</option>';
+            if (curG) gender.value = curG;
+        }
+
+        // Split stored phone into {cc, num} — stored as "966537320488" or "+966537320488" or just "537320488"
+        function splitPhone(val) {
+            if (!val) return { cc: '+966', num: '' };
+            val = val.replace(/\s+/g, '');
+            if (!val.startsWith('+')) val = '+' + val;
+            // Try to match known country codes (longest first)
+            var sorted = _ccList.map(function(c) { return c.c; }).sort(function(a, b) { return b.length - a.length; });
+            for (var i = 0; i < sorted.length; i++) {
+                if (val.startsWith(sorted[i])) {
+                    return { cc: sorted[i], num: val.slice(sorted[i].length) };
+                }
+            }
+            return { cc: '+966', num: val.replace(/^\+/, '') };
+        }
+
+        function getFullPhone(ccId, numId) {
+            var cc = document.getElementById(ccId).value;
+            var num = document.getElementById(numId).value.trim();
+            if (!num) return '';
+            return cc.replace('+', '') + num;
+        }
+
+        function profileI18n(lang) {
+            var ar = lang === 'ar';
+            document.getElementById('profilePageTitle').textContent = ar ? 'الملف الشخصي' : 'Profile';
+            document.getElementById('profileBackBtn').textContent = ar ? 'العودة للبوابة' : 'Back to Portal';
+            document.getElementById('profileCardPersonal').textContent = ar ? 'المعلومات الشخصية' : 'Personal Information';
+            document.getElementById('profileCardJob').textContent = ar ? 'المعلومات الوظيفية' : 'Job Information';
+            document.getElementById('profileCardDocs').textContent = ar ? 'المستندات' : 'Documents';
+            document.getElementById('prLblName').textContent = ar ? 'الاسم الرباعي' : 'Full Name';
+            document.getElementById('prLblPhone').textContent = ar ? 'رقم الجوال' : 'Phone';
+            document.getElementById('prLblEmergency').textContent = ar ? 'رقم الطوارئ' : 'Emergency Phone';
+            document.getElementById('prLblDob').textContent = ar ? 'تاريخ الميلاد' : 'Date of Birth';
+            document.getElementById('prLblMarital').textContent = ar ? 'الحالة الاجتماعية' : 'Marital Status';
+            document.getElementById('prLblNationality').textContent = ar ? 'الجنسية' : 'Nationality';
+            document.getElementById('prLblGender').textContent = ar ? 'الجنس' : 'Gender';
+            document.getElementById('prLblJob').textContent = ar ? 'المسمى الوظيفي' : 'Job Title';
+            document.getElementById('prLblDept').textContent = ar ? 'القسم' : 'Department';
+            document.getElementById('prLblStartDate').textContent = ar ? 'تاريخ بداية العمل' : 'Start Date';
+            document.getElementById('prLblMajor').textContent = ar ? 'التخصص الجامعي' : 'University Major';
+            document.getElementById('profileSaveBtn').textContent = ar ? 'حفظ التغييرات' : 'Save Changes';
+            document.getElementById('profileHint').textContent = ar ? 'بعد التعديل اضغط حفظ — الترجمة للغة الأخرى تتم تلقائياً.' : 'Press Save after editing — translation to the other language is automatic.';
+            document.getElementById('profileTranslatingText').textContent = ar ? 'جاري الترجمة...' : 'Translating...';
+            populateMaritalGender(lang);
+            // Update name field value to match current language
+            if (_profileData) {
+                document.getElementById('prName').value = ar ? (_profileData.full_name_ar || '') : (_profileData.full_name_en || '');
+                document.getElementById('prJob').value = ar ? (_profileData.job_title_ar || '') : (_profileData.job_title_en || '');
+                document.getElementById('prMajor').value = ar ? (_profileData.university_major_ar || '') : (_profileData.university_major_en || '');
+            }
+            // Re-render docs with correct language if data is loaded
+            if (_profileData && _profileUid) {
+                renderProfileDocs(_profileData, lang, _profileUid);
+            }
+        }
+
+        // Listen for language changes to update profile labels
+        navbarEl.addEventListener('njd-lang-change', function() {
+            if (document.getElementById('profileSection').style.display !== 'none') {
+                profileI18n(getLang());
+            }
+        });
+
+        function loadProfilePage() {
+            var lang = getLang();
+            profileI18n(lang);
+            _profileDirty = false;
+            document.getElementById('profileSaveWrap').style.display = 'none';
+
+            sb.auth.getSession().then(function(result) {
+                if (!result.data.session) return;
+                var uid = result.data.session.user.id;
+                _profileUid = uid;
+                sb.from('profiles').select('*').eq('id', uid).maybeSingle().then(function(r) {
+                    if (!r.data) return;
+                    if (!r.data.profile_completed) {
+                        location.hash = '#portal';
+                        return;
+                    }
+                    _profileData = r.data;
+                    renderProfileData(r.data, lang, uid);
+                });
+            });
+        }
+
+        function renderProfileData(p, lang, uid) {
+            var ar = lang === 'ar';
+            // Personal — show current language
+            document.getElementById('prName').value = ar ? (p.full_name_ar || '') : (p.full_name_en || '');
+            // Phone with country code split
+            populateCCSelect('prPhoneCC');
+            populateCCSelect('prEmergencyCC');
+            var ph = splitPhone(p.phone);
+            document.getElementById('prPhoneCC').value = ph.cc;
+            document.getElementById('prPhone').value = ph.num;
+            var eph = splitPhone(p.emergency_phone);
+            document.getElementById('prEmergencyCC').value = eph.cc;
+            document.getElementById('prEmergency').value = eph.num;
+            document.getElementById('prDob').value = p.date_of_birth || '';
+            populateMaritalGender(lang);
+            document.getElementById('prMarital').value = p.marital_status || '';
+            document.getElementById('prNationality').value = p.nationality || '';
+            document.getElementById('prGender').value = p.gender || '';
+
+            // Job — show current language
+            document.getElementById('prJob').value = ar ? (p.job_title_ar || '') : (p.job_title_en || '');
+            document.getElementById('prStartDate').value = p.start_date || '';
+            document.getElementById('prMajor').value = ar ? (p.university_major_ar || '') : (p.university_major_en || '');
+
+            // Department — load dropdown
+            var deptSel = document.getElementById('prDept');
+            deptSel.innerHTML = '<option value="">—</option>';
+            sb.from('departments').select('id, name_ar, name_en').order('name_ar').then(function(dr) {
+                if (dr.data) {
+                    dr.data.forEach(function(d) {
+                        var o = document.createElement('option');
+                        o.value = d.id;
+                        o.textContent = lang === 'ar' ? d.name_ar : d.name_en;
+                        deptSel.appendChild(o);
+                    });
+                }
+                if (p.department) deptSel.value = p.department;
+                // All data loaded — safe to show
+                hideLoadingScreen();
+            });
+
+            // Documents
+            renderProfileDocs(p, lang, uid);
+
+            // Dirty tracking for ALL editable fields
+            var inputs = document.querySelectorAll('#profileSection .profile-input');
+            inputs.forEach(function(inp) {
+                inp.removeEventListener('input', markProfileDirty);
+                inp.removeEventListener('change', markProfileDirty);
+                inp.addEventListener('input', markProfileDirty);
+                inp.addEventListener('change', markProfileDirty);
+            });
+        }
+
+        function renderProfileDocs(p, lang, uid) {
+            var docFields = [
+                { key: 'iqama_file', ar: 'صورة الهوية/الإقامة', en: 'IQAMA / ID' },
+                { key: 'passport_file', ar: 'صورة الجواز', en: 'Passport' },
+                { key: 'cv_file', ar: 'السيرة الذاتية', en: 'CV' },
+                { key: 'degree_file', ar: 'صورة المؤهل الجامعي', en: 'Degree Certificate' }
+            ];
+            var docsHtml = '';
+            docFields.forEach(function(doc) {
+                var filePath = p[doc.key];
+                var label = lang === 'ar' ? doc.ar : doc.en;
+                if (filePath) {
+                    docsHtml += '<div class="profile-doc">'
+                        + '<div class="profile-doc-info"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>' + label + '</span></div>'
+                        + '<div class="profile-doc-actions">'
+                        + '<button class="profile-doc-btn view" data-path="' + filePath + '"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> ' + (lang === 'ar' ? 'عرض' : 'View') + '</button>'
+                        + '<button class="profile-doc-btn download" data-path="' + filePath + '">' + (lang === 'ar' ? 'تحميل' : 'Download') + '</button>'
+                        + '<label class="profile-doc-btn replace">' + (lang === 'ar' ? 'استبدال' : 'Replace') + '<input type="file" data-field="' + doc.key + '" accept=".pdf,.jpg,.jpeg,.png"></label>'
+                        + '</div></div>';
+                } else {
+                    docsHtml += '<div class="profile-doc">'
+                        + '<div class="profile-doc-info"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>' + label + '</span></div>'
+                        + '<div class="profile-doc-actions">'
+                        + '<span class="profile-doc-none">' + (lang === 'ar' ? 'غير مرفوع' : 'Not uploaded') + '</span>'
+                        + '<label class="profile-doc-btn replace">' + (lang === 'ar' ? 'رفع' : 'Upload') + '<input type="file" data-field="' + doc.key + '" accept=".pdf,.jpg,.jpeg,.png"></label>'
+                        + '</div></div>';
+                }
+            });
+            document.getElementById('profileDocsGrid').innerHTML = docsHtml;
+
+            // View buttons (eye icon — open in new tab)
+            document.querySelectorAll('#profileDocsGrid .view').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var path = btn.dataset.path;
+                    sb.storage.from('employee-documents').createSignedUrl(path, 300).then(function(r) {
+                        if (r.data && r.data.signedUrl) {
+                            window.open(r.data.signedUrl, '_blank');
+                        } else {
+                            showProfileToast(getLang() === 'ar' ? 'تعذر فتح الملف' : 'Could not open file', true);
+                        }
+                    });
+                });
+            });
+
+            // Download buttons
+            document.querySelectorAll('#profileDocsGrid .download').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var path = btn.dataset.path;
+                    sb.storage.from('employee-documents').createSignedUrl(path, 300, { download: true }).then(function(r) {
+                        if (r.data && r.data.signedUrl) {
+                            window.open(r.data.signedUrl, '_blank');
+                        } else {
+                            showProfileToast(getLang() === 'ar' ? 'تعذر تحميل الملف' : 'Could not download file', true);
+                        }
+                    });
+                });
+            });
+
+            // Replace/Upload file inputs
+            document.querySelectorAll('#profileDocsGrid input[type="file"]').forEach(function(inp) {
+                inp.addEventListener('change', function() {
+                    if (!inp.files || !inp.files[0]) return;
+                    var file = inp.files[0];
+                    if (file.size > 5 * 1024 * 1024) {
+                        showProfileToast(getLang() === 'ar' ? 'حجم الملف يجب أن لا يتجاوز 5 ميجابايت' : 'File must be under 5MB', true);
+                        return;
+                    }
+                    var field = inp.dataset.field;
+                    var ext = file.name.split('.').pop();
+                    var path = uid + '/' + field + '_' + Date.now() + '.' + ext;
+                    var lbl = inp.parentElement;
+                    lbl.style.opacity = '0.5';
+                    lbl.style.pointerEvents = 'none';
+                    sb.storage.from('employee-documents').upload(path, file).then(function(r) {
+                        if (r.error) {
+                            showProfileToast(getLang() === 'ar' ? 'فشل رفع الملف' : 'Upload failed', true);
+                            lbl.style.opacity = ''; lbl.style.pointerEvents = '';
+                            return;
+                        }
+                        var update = {};
+                        update[field] = path;
+                        sb.from('profiles').update(update).eq('id', uid).then(function(ur) {
+                            lbl.style.opacity = ''; lbl.style.pointerEvents = '';
+                            if (ur.error) {
+                                showProfileToast(getLang() === 'ar' ? 'فشل تحديث البيانات' : 'Update failed', true);
+                                return;
+                            }
+                            showProfileToast(getLang() === 'ar' ? 'تم رفع الملف بنجاح' : 'File uploaded');
+                            loadProfilePage();
+                        });
+                    });
+                });
+            });
+        }
+
+        function markProfileDirty() {
+            if (_profileDirty) return;
+            _profileDirty = true;
+            document.getElementById('profileSaveWrap').style.display = '';
+        }
+
+        document.getElementById('profileSaveBtn').addEventListener('click', function() {
+            var btn = document.getElementById('profileSaveBtn');
+            var lang = getLang();
+            var ar = lang === 'ar';
+            btn.disabled = true;
+
+            var fullName = document.getElementById('prName').value.trim();
+            var jobTitle = document.getElementById('prJob').value.trim();
+            var major = document.getElementById('prMajor').value.trim();
+
+            // Build translation request
+            var toTranslate = {};
+            if (fullName) toTranslate.full_name = fullName;
+            if (jobTitle) toTranslate.job_title = jobTitle;
+            if (major) toTranslate.university_major = major;
+            var direction = ar ? 'ar-to-en' : 'en-to-ar';
+
+            var translatingEl = document.getElementById('profileTranslating');
+
+            function doSave(translated) {
+                var data = {
+                    phone: getFullPhone('prPhoneCC', 'prPhone'),
+                    emergency_phone: getFullPhone('prEmergencyCC', 'prEmergency'),
+                    date_of_birth: document.getElementById('prDob').value || null,
+                    marital_status: document.getElementById('prMarital').value || null,
+                    nationality: document.getElementById('prNationality').value.trim() || null,
+                    gender: document.getElementById('prGender').value || null,
+                    department: document.getElementById('prDept').value || null,
+                    start_date: document.getElementById('prStartDate').value || null
+                };
+                // Set both languages
+                if (ar) {
+                    data.full_name_ar = fullName;
+                    data.full_name_en = (translated && translated.full_name) || _profileData.full_name_en || fullName;
+                    data.name_ar = fullName.split(/\s+/)[0] || '';
+                    data.name_en = data.full_name_en.split(/\s+/)[0] || '';
+                    data.job_title_ar = jobTitle || null;
+                    data.job_title_en = (translated && translated.job_title) || _profileData.job_title_en || jobTitle || null;
+                    data.university_major_ar = major || null;
+                    data.university_major_en = (translated && translated.university_major) || _profileData.university_major_en || major || null;
+                } else {
+                    data.full_name_en = fullName;
+                    data.full_name_ar = (translated && translated.full_name) || _profileData.full_name_ar || fullName;
+                    data.name_en = fullName.split(/\s+/)[0] || '';
+                    data.name_ar = data.full_name_ar.split(/\s+/)[0] || '';
+                    data.job_title_en = jobTitle || null;
+                    data.job_title_ar = (translated && translated.job_title) || _profileData.job_title_ar || jobTitle || null;
+                    data.university_major_en = major || null;
+                    data.university_major_ar = (translated && translated.university_major) || _profileData.university_major_ar || major || null;
+                }
+
+                translatingEl.style.display = 'none';
+                sb.auth.getSession().then(function(result) {
+                    if (!result.data.session) { btn.disabled = false; return; }
+                    var uid = result.data.session.user.id;
+                    sb.from('profiles').update(data).eq('id', uid).then(function(r) {
+                        btn.disabled = false;
+                        if (r.error) {
+                            showProfileToast(lang === 'ar' ? 'حدث خطأ' : 'Error', true);
+                            return;
+                        }
+                        // Update local cache
+                        Object.assign(_profileData, data);
+                        _profileDirty = false;
+                        document.getElementById('profileSaveWrap').style.display = 'none';
+                        showProfileToast(lang === 'ar' ? 'تم الحفظ بنجاح' : 'Saved successfully');
+                        navbarEl.setAttribute('user-name', ar ? data.name_ar : data.name_en);
+                    });
+                });
+            }
+
+            // Translate if there's text to translate
+            if (Object.keys(toTranslate).length > 0) {
+                translatingEl.style.display = '';
+                sb.functions.invoke('translate-profile', { body: { direction: direction, fields: toTranslate } }).then(function(result) {
+                    var translated = null;
+                    if (!result.error && result.data) {
+                        translated = result.data;
+                    }
+                    doSave(translated);
+                }).catch(function() {
+                    doSave(null);
+                });
+            } else {
+                doSave(null);
+            }
+        });
+
+        function showProfileToast(msg, isErr) {
+            var el = document.createElement('div');
+            el.className = 'profile-toast';
+            if (isErr) el.style.background = '#EF4444';
+            el.textContent = msg;
+            document.body.appendChild(el);
+            setTimeout(function() { el.remove(); }, 2500);
+        }
+
+        /* ─── Admin Tab Switching ─── */
+        document.querySelectorAll('[data-atab]').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('[data-atab]').forEach(function(t) { t.classList.remove('active'); });
+                document.querySelectorAll('[data-apanel]').forEach(function(p) { p.classList.remove('active'); });
+                tab.classList.add('active');
+                document.querySelector('[data-apanel="' + tab.dataset.atab + '"]').classList.add('active');
+            });
+        });
+
+        /* ─── Toast ─── */
+        function adminToast(msg, type) {
+            var el = document.createElement('div');
+            el.className = 'admin-toast ' + (type || 'success');
+            el.textContent = msg;
+            document.body.appendChild(el);
+            setTimeout(function() { el.remove(); }, 3000);
+        }
+
+        /* ─── Confirmation Modal ─── */
+        var _modalResolve = null;
+        function adminConfirm(msg) {
+            document.getElementById('adminModalMsg').textContent = msg;
+            document.getElementById('adminModal').style.display = '';
+            return new Promise(function(resolve) { _modalResolve = resolve; });
+        }
+        document.getElementById('adminModalConfirm').addEventListener('click', function() {
+            document.getElementById('adminModal').style.display = 'none';
+            if (_modalResolve) _modalResolve(true);
+        });
+        document.getElementById('adminModalCancel').addEventListener('click', function() {
+            document.getElementById('adminModal').style.display = 'none';
+            if (_modalResolve) _modalResolve(false);
+        });
+
+        /* ─── Load Admin Data ─── */
+        function loadAdminData() {
+            // Users
+            sb.rpc('admin_list_users').then(function(r) {
+                if (r.error || !r.data) return;
+                __adminUsers = r.data;
+                renderUsersTable(r.data);
+                renderOverview(r.data);
+                // Populate notif target dropdown
+                var sel = document.getElementById('adminNotifTarget');
+                sel.innerHTML = '<option value="all">' + (getLang() === 'ar' ? 'الكل' : 'Everyone') + '</option>';
+                r.data.forEach(function(u) {
+                    var o = document.createElement('option');
+                    o.value = u.user_id;
+                    o.textContent = (getLang() === 'ar' ? u.name_ar : u.name_en) || u.email;
+                    sel.appendChild(o);
+                });
+            });
+            // Emails
+            sb.from('allowed_emails').select('*').order('created_at', { ascending: false }).then(function(r) {
+                if (r.data) renderEmailsList(r.data);
+            });
+            // Notifications count + recent
+            sb.from('notifications').select('*').order('created_at', { ascending: false }).limit(10).then(function(r) {
+                renderNotifsList(r.data || []);
+            });
+            // Departments
+            loadDepts();
+        }
+
+        /* ─── Render Overview ─── */
+        function renderOverview(users) {
+            var lang = getLang();
+            var total = users.length;
+            var active = users.filter(function(u) { return u.profile_completed; }).length;
+            var pending = total - active;
+
+            sb.from('notifications').select('id', { count: 'exact', head: true }).then(function(r) {
+                var notifCount = (r.count !== null && r.count !== undefined) ? r.count : 0;
+                var stats = [
+                    { n: total, l: lang === 'ar' ? 'إجمالي المستخدمين' : 'Total Users' },
+                    { n: active, l: lang === 'ar' ? 'بروفايل مكتمل' : 'Profile Complete' },
+                    { n: pending, l: lang === 'ar' ? 'بدون بروفايل' : 'No Profile' },
+                    { n: notifCount, l: lang === 'ar' ? 'الإشعارات المرسلة' : 'Notifications Sent' }
+                ];
+                var html = '';
+                stats.forEach(function(s) {
+                    html += '<div class="admin-stat"><div class="admin-stat-num">' + s.n + '</div><div class="admin-stat-label">' + s.l + '</div></div>';
+                });
+                document.getElementById('adminStats').innerHTML = html;
+            });
+
+            // Recent signups
+            var recent = users.slice(0, 10);
+            var rhtml = '<h3>' + (lang === 'ar' ? 'آخر التسجيلات' : 'Recent Signups') + '</h3>';
+            recent.forEach(function(u) {
+                var name = (lang === 'ar' ? u.name_ar : u.name_en) || u.email;
+                var date = new Date(u.created_at).toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US');
+                rhtml += '<div class="admin-recent-item"><span>' + name + '</span><span style="color:var(--gray-400);font-size:12px;">' + date + '</span></div>';
+            });
+            document.getElementById('adminRecent').innerHTML = rhtml;
+        }
+
+        /* ─── Render Users Table ─── */
+        function renderUsersTable(users) {
+            var lang = getLang();
+            var body = document.getElementById('adminUsersBody');
+            body.innerHTML = '';
+            users.forEach(function(u) {
+                var tr = document.createElement('tr');
+                var name = (lang === 'ar' ? u.name_ar : u.name_en) || '—';
+                var roleCls = u.role_name === 'super_admin' ? 'super' : 'emp';
+                var roleLabel = u.role_name === 'super_admin' ? (lang === 'ar' ? 'مدير' : 'Admin') : (lang === 'ar' ? 'موظف' : 'Employee');
+
+                var locReq = u.location_required !== false;
+                tr.innerHTML = '<td>' + name + '</td>'
+                    + '<td style="direction:ltr;font-size:12px;">' + u.email + '</td>'
+                    + '<td><span class="admin-badge-role ' + roleCls + '">' + roleLabel + '</span></td>'
+                    + '<td><button class="toggle ' + (u.has_hr ? 'on' : 'off') + '" data-uid="' + u.user_id + '" data-app="hr"></button></td>'
+                    + '<td><button class="toggle loc-toggle ' + (locReq ? 'on' : 'off') + '" data-uid="' + u.user_id + '" data-loc="true"></button></td>'
+                    + '<td>' + (u.profile_completed ? '<span style="color:#059669;">&#10003;</span>' : '<span style="color:var(--gray-300);">&#10007;</span>') + '</td>'
+                    + '<td><select class="role-sel" data-uid="' + u.user_id + '"><option value="employee"' + (u.role_name !== 'super_admin' ? ' selected' : '') + '>' + (lang === 'ar' ? 'موظف' : 'Employee') + '</option><option value="super_admin"' + (u.role_name === 'super_admin' ? ' selected' : '') + '>' + (lang === 'ar' ? 'مدير' : 'Admin') + '</option></select> <button class="admin-del" data-uid="' + u.user_id + '" data-name="' + name + '">' + (lang === 'ar' ? 'حذف' : 'Delete') + '</button></td>';
+                body.appendChild(tr);
+            });
+
+            // Event delegation for app access toggles
+            body.querySelectorAll('.toggle:not(.loc-toggle)').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var uid = btn.dataset.uid, app = btn.dataset.app;
+                    var grant = btn.classList.contains('off');
+                    sb.rpc('admin_toggle_app_access', { target_user_id: uid, app: app, should_grant: grant }).then(function(r) {
+                        if (r.error) { adminToast(t('adminError') || 'Error', 'error'); return; }
+                        btn.classList.toggle('on', grant);
+                        btn.classList.toggle('off', !grant);
+                        adminToast(getLang() === 'ar' ? 'تم التحديث' : 'Updated');
+                    });
+                });
+            });
+
+            // Location requirement toggles
+            body.querySelectorAll('.loc-toggle').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var uid = btn.dataset.uid;
+                    var required = btn.classList.contains('off');
+                    sb.rpc('admin_update_location_required', { target_user_id: uid, required: required }).then(function(r) {
+                        if (r.error) { adminToast(t('adminError') || 'Error', 'error'); return; }
+                        btn.classList.toggle('on', required);
+                        btn.classList.toggle('off', !required);
+                        adminToast(getLang() === 'ar' ? 'تم التحديث' : 'Updated');
+                    });
+                });
+            });
+
+            body.querySelectorAll('.role-sel').forEach(function(sel) {
+                sel.addEventListener('change', function() {
+                    var uid = sel.dataset.uid, role = sel.value;
+                    sb.rpc('admin_update_role', { target_user_id: uid, new_role: role }).then(function(r) {
+                        if (r.error) { adminToast(t('adminError') || 'Error', 'error'); return; }
+                        adminToast(getLang() === 'ar' ? 'تم تحديث الدور' : 'Role updated');
+                    });
+                });
+            });
+
+            body.querySelectorAll('.admin-del').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var uid = btn.dataset.uid, name = btn.dataset.name;
+                    var msg = (getLang() === 'ar' ? 'هل أنت متأكد من حذف ' : 'Delete ') + name + '?';
+                    adminConfirm(msg).then(function(ok) {
+                        if (!ok) return;
+                        sb.rpc('admin_delete_user', { target_user_id: uid }).then(function(r) {
+                            if (r.error) { adminToast(r.error.message || 'Error', 'error'); return; }
+                            adminToast(getLang() === 'ar' ? 'تم حذف المستخدم' : 'User deleted');
+                            loadAdminData();
+                        });
+                    });
+                });
+            });
+        }
+
+        /* ─── Search Filter ─── */
+        document.getElementById('adminSearch').addEventListener('input', function() {
+            var q = this.value.toLowerCase();
+            var filtered = __adminUsers.filter(function(u) {
+                return (u.name_ar || '').toLowerCase().includes(q)
+                    || (u.name_en || '').toLowerCase().includes(q)
+                    || (u.email || '').toLowerCase().includes(q);
+            });
+            renderUsersTable(filtered);
+        });
+
+        /* ─── Render Allowed Emails ─── */
+        function renderEmailsList(emails) {
+            var wrap = document.getElementById('adminEmailsList');
+            if (!emails.length) { wrap.innerHTML = '<div class="admin-empty">' + (getLang() === 'ar' ? 'لا توجد إيميلات مضافة' : 'No emails added') + '</div>'; return; }
+            wrap.innerHTML = '';
+            emails.forEach(function(e) {
+                var div = document.createElement('div');
+                div.className = 'admin-email-item';
+                div.innerHTML = '<span style="direction:ltr;">' + e.email + '</span><button class="admin-del" data-eid="' + e.id + '">' + (getLang() === 'ar' ? 'حذف' : 'Delete') + '</button>';
+                div.querySelector('.admin-del').addEventListener('click', function() {
+                    sb.rpc('admin_remove_allowed_email', { p_email_id: e.id }).then(function(r) {
+                        if (r.error) { adminToast('Error', 'error'); return; }
+                        div.remove();
+                        adminToast(getLang() === 'ar' ? 'تم الحذف' : 'Removed');
+                    });
+                });
+                wrap.appendChild(div);
+            });
+        }
+
+        document.getElementById('adminAddEmailBtn').addEventListener('click', function() {
+            var input = document.getElementById('adminNewEmail');
+            var email = input.value.trim();
+            if (!email) return;
+            sb.rpc('admin_add_allowed_email', { p_email: email }).then(function(r) {
+                if (r.error) { adminToast(r.error.message || 'Error', 'error'); return; }
+                input.value = '';
+                adminToast(getLang() === 'ar' ? 'تمت الإضافة' : 'Added');
+                sb.from('allowed_emails').select('*').order('created_at', { ascending: false }).then(function(r2) {
+                    if (r2.data) renderEmailsList(r2.data);
+                });
+            });
+        });
+
+        /* ─── Render Notifications List ─── */
+        function renderNotifsList(notifs) {
+            var wrap = document.getElementById('adminNotifsList');
+            if (!notifs.length) { wrap.innerHTML = '<div class="admin-empty">' + (getLang() === 'ar' ? 'لا توجد إشعارات' : 'No notifications') + '</div>'; return; }
+            var lang = getLang();
+            wrap.innerHTML = '';
+            notifs.forEach(function(n) {
+                var div = document.createElement('div');
+                div.className = 'admin-recent-item';
+                div.innerHTML = '<span>' + (lang === 'ar' ? n.title_ar : n.title_en) + '</span><span style="color:var(--gray-400);font-size:12px;">' + new Date(n.created_at).toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US') + '</span>';
+                wrap.appendChild(div);
+            });
+        }
+
+        /* ─── Send Notification ─── */
+        document.getElementById('adminSendNotifBtn').addEventListener('click', function() {
+            var target = document.getElementById('adminNotifTarget').value;
+            var titleAr = document.getElementById('adminNotifTitleAr').value.trim();
+            var titleEn = document.getElementById('adminNotifTitleEn').value.trim();
+            if (!titleAr || !titleEn) { adminToast(getLang() === 'ar' ? 'العنوان مطلوب' : 'Title required', 'error'); return; }
+
+            var params = {
+                target_user_id: target === 'all' ? null : target,
+                p_app: document.getElementById('adminNotifApp').value,
+                p_title_ar: titleAr,
+                p_title_en: titleEn,
+                p_body_ar: document.getElementById('adminNotifBodyAr').value.trim() || null,
+                p_body_en: document.getElementById('adminNotifBodyEn').value.trim() || null,
+                p_link: document.getElementById('adminNotifLink').value.trim() || null
+            };
+
+            sb.rpc('admin_send_notification', params).then(function(r) {
+                if (r.error) { adminToast(r.error.message || 'Error', 'error'); return; }
+                adminToast(getLang() === 'ar' ? 'تم إرسال الإشعار' : 'Notification sent');
+                document.getElementById('adminNotifTitleAr').value = '';
+                document.getElementById('adminNotifTitleEn').value = '';
+                document.getElementById('adminNotifBodyAr').value = '';
+                document.getElementById('adminNotifBodyEn').value = '';
+                document.getElementById('adminNotifLink').value = '';
+                loadAdminData();
+            });
+        });
+
+        /* ─── Department Management ─── */
+        var _editingDeptId = null;
+
+        function loadDepts() {
+            sb.from('departments').select('*').order('created_at', { ascending: false }).then(function(r) {
+                renderDeptsTable(r.data || []);
+            });
+        }
+
+        function renderDeptsTable(depts) {
+            var body = document.getElementById('adminDeptsBody');
+            var lang = getLang();
+            if (!depts.length) {
+                body.innerHTML = '<tr><td colspan="3" class="admin-empty">' + (lang === 'ar' ? 'لا توجد أقسام' : 'No departments') + '</td></tr>';
+                return;
+            }
+            body.innerHTML = '';
+            depts.forEach(function(d) {
+                var tr = document.createElement('tr');
+                tr.innerHTML = '<td>' + d.name_ar + '</td><td style="direction:ltr;">' + d.name_en + '</td>'
+                    + '<td><button class="admin-del" data-action="edit" style="border-color:var(--purple-200);color:var(--purple-600);margin-left:6px;" data-did="' + d.id + '" data-ar="' + d.name_ar + '" data-en="' + d.name_en + '">' + (lang === 'ar' ? 'تعديل' : 'Edit') + '</button>'
+                    + '<button class="admin-del" data-action="del" data-did="' + d.id + '" data-name="' + d.name_ar + '">' + (lang === 'ar' ? 'حذف' : 'Delete') + '</button></td>';
+
+                tr.querySelector('[data-action="edit"]').addEventListener('click', function() {
+                    _editingDeptId = d.id;
+                    document.getElementById('adminDeptEditAr').value = d.name_ar;
+                    document.getElementById('adminDeptEditEn').value = d.name_en;
+                    document.getElementById('adminDeptEditWrap').style.display = '';
+                    document.getElementById('adminDeptForm').style.display = 'none';
+                });
+
+                tr.querySelector('[data-action="del"]').addEventListener('click', function() {
+                    adminConfirm((lang === 'ar' ? 'حذف قسم ' : 'Delete department ') + d.name_ar + '?').then(function(ok) {
+                        if (!ok) return;
+                        sb.from('departments').delete().eq('id', d.id).then(function(r) {
+                            if (r.error) { adminToast(r.error.message || 'Error', 'error'); return; }
+                            adminToast(lang === 'ar' ? 'تم الحذف' : 'Deleted');
+                            loadDepts();
+                        });
+                    });
+                });
+
+                body.appendChild(tr);
+            });
+        }
+
+        document.getElementById('adminAddDeptBtn').addEventListener('click', function() {
+            var ar = document.getElementById('adminDeptNameAr').value.trim();
+            var en = document.getElementById('adminDeptNameEn').value.trim();
+            if (!ar || !en) return;
+            sb.from('departments').insert({ name_ar: ar, name_en: en, created_by: null }).then(function(r) {
+                if (r.error) { adminToast(r.error.message || 'Error', 'error'); return; }
+                document.getElementById('adminDeptNameAr').value = '';
+                document.getElementById('adminDeptNameEn').value = '';
+                adminToast(getLang() === 'ar' ? 'تمت الإضافة' : 'Added');
+                loadDepts();
+            });
+        });
+
+        document.getElementById('adminSaveDeptBtn').addEventListener('click', function() {
+            if (!_editingDeptId) return;
+            var ar = document.getElementById('adminDeptEditAr').value.trim();
+            var en = document.getElementById('adminDeptEditEn').value.trim();
+            if (!ar || !en) return;
+            sb.from('departments').update({ name_ar: ar, name_en: en }).eq('id', _editingDeptId).then(function(r) {
+                if (r.error) { adminToast(r.error.message || 'Error', 'error'); return; }
+                _editingDeptId = null;
+                document.getElementById('adminDeptEditWrap').style.display = 'none';
+                document.getElementById('adminDeptForm').style.display = '';
+                adminToast(getLang() === 'ar' ? 'تم التحديث' : 'Updated');
+                loadDepts();
+            });
+        });
+
+        document.getElementById('adminCancelDeptBtn').addEventListener('click', function() {
+            _editingDeptId = null;
+            document.getElementById('adminDeptEditWrap').style.display = 'none';
+            document.getElementById('adminDeptForm').style.display = '';
+        });
 
     })();
     </script>
